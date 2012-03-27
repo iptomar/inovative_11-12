@@ -5,12 +5,13 @@
 package Genetics;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
  * @author diogoantonio
  */
-public class Chromosome {
+public class Chromosome implements Iterable<Gene> {
 
     private static final int DEFAULT_SIZE_CHROMOSOME = 10;
     private ArrayList<Gene> _genotype;
@@ -30,14 +31,10 @@ public class Chromosome {
     public void setGene(int index, Gene gene){
         _genotype.add(index, gene);
     }
-    
-    public void generateRandomChromosome(){
-        //TODO: implmentar este metodo
-    }
-    
-    public int numberOfOnes(){
-        //TODO: implementar esta classe
-        return 0;
+
+    @Override
+    public Iterator<Gene> iterator() {
+        return this._genotype.iterator();
     }
     
 }

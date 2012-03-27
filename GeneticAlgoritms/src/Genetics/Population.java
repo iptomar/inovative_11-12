@@ -11,8 +11,14 @@ import java.util.ArrayList;
  * @author diogoantonio
  */
 public class Population {
+    
+    protected static final Random randomGenerator = new Random();
 
     private ArrayList<Individual> _pop;
+    
+    public Population(int numberIndividuals){
+        _pop = new ArrayList<Individual>(numberIndividuals);
+    }
 
     public Individual getIndividual(int index) {
         return _pop.get(index);
@@ -23,6 +29,13 @@ public class Population {
     }
 
     public void createRandom() {
-        //TODO: implementar este metodo
+        for (Individual individual : _pop) {
+            for (Object cro : individual) {
+                for (Object gene : cro) {
+                    
+                }
+            }
+            
+        }
     }
 }

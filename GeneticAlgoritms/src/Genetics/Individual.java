@@ -5,18 +5,25 @@
 package Genetics;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * 
  * @author diogoantonio
  */
-public class Individual {
+public abstract class Individual<T> implements Iterable<Chromosome> {
+    
+    private static final int DEFAULT_SIZE_GENOME = 1;
 
-    private ArrayList<Chromosome> _genome;
+    private ArrayList<
+            > _genome;
 
-    public Individual() {
-        _genome.add(new Chromosome());
-        //TODO: Gerar cromossoma aleatório
+    public Individual(){
+        this(DEFAULT_SIZE_GENOME);
+    }
+    
+    public Individual(int numberChromosomes) {
+        _genome = new ArrayList<Chromosome>(numberChromosomes);
     }
 
     public Chromosome getChromosome(int index) {
@@ -27,12 +34,12 @@ public class Individual {
         _genome.add(index, cromosome);
     }
     
-    public int sizeChromosome(){
-        return _genome.size();
+    public abstract T fiteness();
+    
+    @Override
+    public Iterator<Chromosome> iterator() {
+        return this._genome.iterator();
     }
     
-    //TODO: metodo fitness [metodo abstracto??]
-    public void fitness(){
-        //TODO: implmentar este metodo [???]
-    }
+    
 }
