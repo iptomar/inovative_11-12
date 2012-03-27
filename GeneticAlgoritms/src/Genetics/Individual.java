@@ -1,31 +1,34 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Genetics;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
-/**
- * 
- * @author diogoantonio
- */
-public abstract class Individual<T> implements Iterable<Chromosome> {
+public abstract class Individual implements Iterable<Chromosome> {
     
     private static final int DEFAULT_SIZE_GENOME = 1;
 
-    private ArrayList<
-            > _genome;
-
+    protected ArrayList<Chromosome> _genome;
+    private int _numberGenes;
+    protected int _numberChromosomes = DEFAULT_SIZE_GENOME; 
+    
     public Individual(){
         this(DEFAULT_SIZE_GENOME);
     }
     
     public Individual(int numberChromosomes) {
+        this._numberChromosomes = numberChromosomes; 
         _genome = new ArrayList<Chromosome>(numberChromosomes);
+        
+        this._inicializationChromosomes();
     }
 
+    private void _inicializationChromosomes() {
+        for (int __indexChromosome = 0; __indexChromosome < this._numberChromosomes; __indexChromosome++) {
+            this._genome.set(__indexChromosome, new Chromosome());
+        }
+    }
+    
     public Chromosome getChromosome(int index) {
         return _genome.get(index);
     }
@@ -34,7 +37,7 @@ public abstract class Individual<T> implements Iterable<Chromosome> {
         _genome.add(index, cromosome);
     }
     
-    public abstract T fiteness();
+    public abstract int fiteness();
     
     @Override
     public Iterator<Chromosome> iterator() {

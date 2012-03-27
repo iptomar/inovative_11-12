@@ -1,22 +1,26 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Genetics;
 
 import java.util.Random;
 
-/**
- *
- * @author diogoantonio
- */
 public class Gene<T> {
     
-    // T stands for "Type"
+    static final Random random = new Random();
+    
     private T _allele;
 
-    public Gene(T valueAllele) {
+    public Gene(T valueAllele, int sizeAllelo) {
         this._allele = valueAllele;
+    
+        if(valueAllele instanceof Boolean[]){
+            Boolean[] __allelo = new Boolean[sizeAllelo];
+                
+            // gerar de forma aleatoria os valores em binario para o allelo
+            for (int __indexAllelo = 0; __indexAllelo < sizeAllelo; __indexAllelo++) {
+                __allelo[__indexAllelo] = random.nextBoolean();
+            }
+                
+            _allele = (T)__allelo;
+        }
     }
 
     public T getAllele() {
