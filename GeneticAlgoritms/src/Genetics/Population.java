@@ -110,4 +110,28 @@ public class Population {
         this._typeIndividual = typeIndividual;
     }
     
+    public void addIndividual(Individual individual){
+        this._population.add(individual);
+    }
+    
+    public ArrayList<Individual> getArrayIndividualRandom(int numberIndividual, boolean removeIndividualFromPopulation){
+        final ArrayList<Individual> __newArrayIndividual = new ArrayList<Individual>(numberIndividual);
+        int __numberIndividual = this._numberIndividuals;
+        int __indexIndividual;
+        
+        // Escolher de forma aleatoria varios individuos
+        for (int __numberIndividualCount = 0; __numberIndividualCount < numberIndividual; __numberIndividualCount++) {
+            // Selecciona de forma aleatoria o index de um individuo
+            __indexIndividual = Population.randomGenerator.nextInt(__numberIndividual - 1);
+            __newArrayIndividual.add(this._population.get(__indexIndividual));
+            
+            // caso se queira remover o individuo da população assim que é selecionado
+            if(removeIndividualFromPopulation){
+                __numberIndividual--;
+                this._population.remove(__indexIndividual);
+            }
+        }        
+        
+        return __newArrayIndividual;
+    }
 }
