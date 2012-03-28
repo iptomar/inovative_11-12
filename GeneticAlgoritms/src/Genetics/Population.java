@@ -24,9 +24,9 @@ public class Population {
     }
     
     private void inicializationPopulation(){
-        for (int __indexIndividual = 0; __indexIndividual < this._numberIndividuals; __indexIndividual++) {
-            if(this._typeIndividual instanceof OnesMax)
-                this._population.add((OnesMax)this._typeIndividual);
+        for (int __indexIndividual = 0; __indexIndividual < this.getNumberIndividuals(); __indexIndividual++) {
+            if(this.getTypeIndividual() instanceof OnesMax)
+                this._population.add((OnesMax)this.getTypeIndividual());
         }
     }
 
@@ -52,6 +52,62 @@ public class Population {
         }
         
         return value.toString();
+    }
+
+    /**
+     * @return the _numberIndividuals
+     */
+    public int getNumberIndividuals() {
+        return _numberIndividuals;
+    }
+
+    /**
+     * @param numberIndividuals the _numberIndividuals to set
+     */
+    public void setNumberIndividuals(int numberIndividuals) {
+        this._numberIndividuals = numberIndividuals;
+    }
+
+    /**
+     * @return the _numberGenes
+     */
+    public int getNumberGenes() {
+        return _numberGenes;
+    }
+
+    /**
+     * @param numberGenes the _numberGenes to set
+     */
+    public void setNumberGenes(int numberGenes) {
+        this._numberGenes = numberGenes;
+    }
+
+    /**
+     * @return the _numberChromosomes
+     */
+    public int getNumberChromosomes() {
+        return _numberChromosomes;
+    }
+
+    /**
+     * @param numberChromosomes the _numberChromosomes to set
+     */
+    public void setNumberChromosomes(int numberChromosomes) {
+        this._numberChromosomes = numberChromosomes;
+    }
+
+    /**
+     * @return the _typeIndividual
+     */
+    public Object getTypeIndividual() {
+        return _typeIndividual;
+    }
+
+    /**
+     * @param typeIndividual the _typeIndividual to set
+     */
+    public void setTypeIndividual(Object typeIndividual) {
+        this._typeIndividual = typeIndividual;
     }
     
 }
