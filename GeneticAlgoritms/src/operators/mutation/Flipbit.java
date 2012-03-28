@@ -4,7 +4,7 @@
  */
 package operators.mutation;
 
-import genetics.Population;
+import Genetics.Population;
 
 /**
  *
