@@ -30,5 +30,9 @@ public class Gene<T> {
     public void setAllele(T allele) {
         this._allele = allele;
     }
+    
+    public void getSize(){
+       
+    }
 
 }
