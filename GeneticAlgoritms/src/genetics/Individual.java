@@ -3,6 +3,13 @@ package genetics;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Classe que representa um individuo.
+ * Recebe como parâmetro o tamanho do genoma, tamanho do genótipo e tamanho dos alelos.
+ * É composta por um ArrayList com elementos do tipo Chromossome, chamados genome.
+ * @author goncalo
+ */
+
 public abstract class Individual implements Iterable<Chromosome> {
     
     private final ArrayList<Chromosome> _genome;

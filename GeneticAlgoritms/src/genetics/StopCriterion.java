@@ -5,7 +5,9 @@
 package genetics;
 
 /**
- *
+ *Classe em que é definido o critério de paragem.
+ *_numberIterations = número de iterações que irão ser executadas
+ *_goodFitness = fitness que se pretende atingir
  * @author Chorinca-Notebook
  */
 public class StopCriterion {

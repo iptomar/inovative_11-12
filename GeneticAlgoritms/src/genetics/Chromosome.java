@@ -2,7 +2,13 @@ package genetics;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
+/**
+ * Classe que representa um cromossoma. Neste momento existe apenas um cromossoma,
+ * mas está preparada para no futuro se fazer a implementação de mais.
+ * Recebe como parâmetro a variável typeIndividual, que representa o tipo do individuo(ex:boolean)
+ * É composta por um ArrayList de elementos do tipo Gene, com o nome genotype.
+ * @author goncalo
+ */
 public class Chromosome implements Iterable<Gene> {
 
     private ArrayList<Gene> _genotype;

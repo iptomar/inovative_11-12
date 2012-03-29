@@ -1,5 +1,10 @@
 package genetics;
-
+/**
+ * Classe que representa um gene. Tem um objecto T do tipo allele, que é o valor
+ * guardado dentro do gene.
+ * @author goncalo
+ * @param <T> 
+ */
 public class Gene<T> {
 
     private T _allele;
@@ -8,6 +13,11 @@ public class Gene<T> {
         this._allele = valueAllelo;
     }
     
+    /**
+     * Criação de um novo gene.
+     * É criado um array de booleans com o tamanho dos allelos
+     * @param newGene 
+     */
     public Gene(Gene<T> newGene){
         // Fazer nova copia do gene
         if(newGene.getAllele() instanceof Boolean[]){

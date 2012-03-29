@@ -8,8 +8,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.ComparatorIndividual;
 
+/**
+ * Classe que representa uma população de individuos.
+ * Recebe como parãmetros o tamanho da população, o tamanho do genoma,
+ * tamanho do genótipo, tamanho dos alelos e o tipo da população(ex:boolean)
+ * É composta por um ArrayList de elementos do tipo Individual
+ * 
+ * @author goncalo
+ */
+
 public class Population implements Iterable<Individual> {
-    
     public static final int DEFAULT_AGE_POPULATION = 0;
     public static final int DEFAULT_SIZE_POPULATION = 10;
     public static final int DEFAULT_SIZE_GENOME     = 1;    
