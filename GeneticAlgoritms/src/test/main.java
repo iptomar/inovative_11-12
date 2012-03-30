@@ -15,7 +15,7 @@ public class main {
     
     public static void main(String[] args) {
         
-        Solver __newSolver = new Solver(1000, 100, new OnesMax(), 1000, 80);
+        Solver __newSolver = new Solver(1000, 100, new OnesMax(), 1000, 99);
         __newSolver.run();
         
     }

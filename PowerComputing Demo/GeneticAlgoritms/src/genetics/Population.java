@@ -25,7 +25,7 @@ public class Population implements Iterable<Individual> {
     public static final int DEFAULT_SIZE_ALLELO     = 10;    
     public static final Individual DEFAULT_TYPE_POPULATION = new OnesMax();
 
-    
+    //gerador de números aleatórios
     public static final Random RANDOM_GENERATOR = new Random();
 
     private ArrayList<Individual> _population;
@@ -36,6 +36,11 @@ public class Population implements Iterable<Individual> {
     private int _sizeAllelo;
     private Individual _typePopulation;
     
+    /**
+     * Construtor por defeito, que cria uma população com os valores definidos
+     * também por defeito.
+     * @param typePopulation 
+     */
     public Population(Individual typePopulation) {
         this(Population.DEFAULT_SIZE_POPULATION,
              Population.DEFAULT_SIZE_GENOME,
@@ -44,10 +49,27 @@ public class Population implements Iterable<Individual> {
              typePopulation);
     }
     
+    /**
+     * Criação de uma população com todos os parâmetros e gera a população aleatoriamente
+     * @param sizePopulation
+     * @param sizeGenome
+     * @param sizeGenotype
+     * @param sizeAllelo
+     * @param typePopulation 
+     */
     public Population(int sizePopulation, int sizeGenome, int sizeGenotype, int sizeAllelo, Individual typePopulation){
         this(sizePopulation, sizeGenome, sizeGenotype, sizeAllelo, typePopulation, true);
     }
     
+    /**
+     * Construtor idêntico ao anterior, mas com a opção de criar uma população aleatória ou não.
+     * @param sizePopulation
+     * @param sizeGenome
+     * @param sizeGenotype
+     * @param sizeAllelo
+     * @param typePopulation
+     * @param initializesPopulation 
+     */
     public Population(int sizePopulation, int sizeGenome, int sizeGenotype, int sizeAllelo, Individual typePopulation, boolean initializesPopulation){
         this._sizePopulation    = sizePopulation;
         this._sizeGenome        = sizeGenome;
@@ -57,14 +79,22 @@ public class Population implements Iterable<Individual> {
         
         _population             = new ArrayList<Individual>(sizePopulation);
         
+        //Se for para iniciar aleatoriamente a população( boolean = true)
+        //chama-se a função inicializationPopulation()
         if(initializesPopulation)
             _inicializationPopulation();
     }
     
+    /**
+     * Inicialização de uma população de forma aleatória.
+     */
     private void _inicializationPopulation(){
         for (int __indexIndividual = 0; __indexIndividual < this._sizePopulation; __indexIndividual++) {
             try {
-                
+                //é necessário utilizar reflection para criar um individuo, visto que este
+                //é uma classe abstracta e seria necessário implementar todos os métodos
+                //abstractos, uma vez que neste momento só temos individuos do tipo OnesMax.
+                //ao utilizar reflection fica preparado para novas implementações de individuos
                 Individual __newIndividual = (Individual)_typePopulation.getClass().newInstance();
                 
                 __newIndividual.setSizeGenome(_sizeGenome);
@@ -126,27 +156,34 @@ public class Population implements Iterable<Individual> {
     }
     
     /***
-     * 
+     * Método que vai buscar individuos individuos aleatoriamente á população.
+     * O número de individuos é passado por parâmetro, e tem a opção de retirar o individuo
+     * da população ou mantê-lo.
      * @param numberIndividual
      * @param removeIndividualFromPopulation
      * @return 
      */
     public ArrayList<Individual> getArrayIndividualsRandom(int numberIndividual, boolean removeIndividualFromPopulation){
+        //array que vai guardas os individuos seleccionados de forma aleatoria
         final ArrayList<Individual> __newArrayIndividual = new ArrayList<Individual>(numberIndividual);
+        //contador dos individuos selecionadas
         int __countIndividual = 0;
+        //index do individuo
         int __indexIndividual;
+        //total de individuos que o método devolve
         int __numberIndividualToReturn = numberIndividual;
         
         // Escolher de forma aleatoria varios individuos        
         while(__countIndividual < __numberIndividualToReturn){
-            
+            //escolhe um individuo aleatório da população
             __indexIndividual = Population.RANDOM_GENERATOR.nextInt(this.getSizePopulation() - 1);
+            //adiciona uma cópia do individuo seleccionado ao novo array criado anteriormente
             __newArrayIndividual.add(this.getPopulation().get(__indexIndividual).clone());
-            
+            //verifica se o individuo é para remover ou não da população original
             if(removeIndividualFromPopulation){
                 this._population.remove(this.getPopulation().get(__indexIndividual));
             }
-            
+            //incremente o contador
             __countIndividual++;
         }
         
@@ -166,7 +203,7 @@ public class Population implements Iterable<Individual> {
     public void setPopulation(ArrayList<Individual> population) {
         this._population = population;
     }
-
+    
     @Override
     public Iterator<Individual> iterator() {
         return this._population.iterator();
@@ -196,7 +233,7 @@ public class Population implements Iterable<Individual> {
             __output.append(" - ");
             __output.append(__individual.toString());
             __output.append(" - ");
-            __output.append(__individual.fiteness());
+            __output.append(__individual.fitness());
             __output.append(" - ");
             __output.append(__individual.getAgeIndividual());
             __output.append("\n");
@@ -234,27 +271,43 @@ public class Population implements Iterable<Individual> {
         this._sizeGenome = sizeGenome;
     }
     
+    /**
+     * Incrementa uma geração a todos os individuos da população
+     */
     public void incrementAgePopulation(){
         for (Individual __individual : this) {
             __individual.incrementAge();
         }
     }
     
+    /**
+     * Reinicia a idade do individuo.
+     * Exemplo:quando se cria um novo individuo(reprodução)
+     */
     public void resetAgePopulation(){
         for (Individual __individual : this) {
             __individual.setAgeIndividual(0);
         }
     }
 
-    public int getBestFiteness() {
-        int __bestFiteness = 0;
+    /**
+     * Percorre a população toda e devolve o melhor fitness encontrado
+     * @return 
+     */
+    public int getBestFitness() {
+        int __bestFitness = 0;
         for (Individual __individual : this) {
-            if(__bestFiteness < __individual.fiteness())
-                __bestFiteness = __individual.fiteness();
+            if(__bestFitness < __individual.fitness())
+                __bestFitness = __individual.fitness();
         }
-        return __bestFiteness;
+        return __bestFitness;
     }
     
+    /**
+     * Devolve os melhores individuos de uma população
+     * @param sizeHallOfFame - número de individuos a devolver
+     * @return 
+     */
     public Population getHallOfFame(int sizeHallOfFame) {
         final Population __newPopulation = 
                 new Population(

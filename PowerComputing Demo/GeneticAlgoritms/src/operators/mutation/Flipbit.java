@@ -36,8 +36,8 @@ public class Flipbit extends Mutation {
                     false);
 
         for (Individual __individuals : population) {
-            for (Chromosome __chromosomes : __individuals) {
-                for (Gene<Boolean[]> __genes : __chromosomes) {
+            for (Object __chromosomes : __individuals) {
+                for (Gene<Boolean[]> __genes :(Chromosome) __chromosomes) {
                     __genes.setAllele(this._doFlipBit(__genes.getAllele()));
                 }
             }

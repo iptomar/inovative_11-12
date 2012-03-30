@@ -64,7 +64,7 @@ public class Tournament extends Selection {
                 __individualsToFightForBest = __individualToEnterInTheTournament.get(0);
                 
                 // Comparar os individuos com base no fiteness
-                if(__bestIndividualTournament.fiteness() >= __individualsToFightForBest.fiteness()){
+                if(__bestIndividualTournament.fitness() >= __individualsToFightForBest.fitness()){
                     // se o individuo continuar a ser o melhor entao remove se o candidato a best
                     __individualToEnterInTheTournament.remove(__individualsToFightForBest);
                     // e volta a por esse individuo na população

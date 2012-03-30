@@ -14,16 +14,22 @@ public class Gene<T> {
     }
     
     /**
-     * Criação de um novo gene.
-     * É criado um array de booleans com o tamanho dos allelos
+     * Construtor que recebe um objecto Gene<T> como parametro, e cria uma cópia.
+     * É necessário quando se aplica os operadores, para não ficar com a referência
+     * á população inicial.
      * @param newGene 
      */
     public Gene(Gene<T> newGene){
-        // Fazer nova copia do gene
+        // Fazer nova copia do gene, quando o allelo é do tipo boolean
         if(newGene.getAllele() instanceof Boolean[]){
+            //cast ao allelo que é passado como parametro através do objecto boolean[]
+            //e atribui o seu tamanha á variável size_allelo
             int __sizeAllelo = ((Boolean[])newGene.getAllele()).length;
+            //criação do novo allelo com o tamanho anterior
             Boolean[] __newAllelo = new Boolean[__sizeAllelo];
             
+            //inicializa cada valor do allelo com base no gene que é passado como parametro
+            //bit a bit atribui o valor que do allelo passado como parâmetro ao novo allelo criado anteriormente
             for (int __indexAlleloValue = 0; __indexAlleloValue < __sizeAllelo; __indexAlleloValue++) {
                 __newAllelo[__indexAlleloValue] = ((Boolean[])newGene.getAllele())[__indexAlleloValue];
             }
@@ -42,8 +48,15 @@ public class Gene<T> {
         this._allele = allele;
     }
     
+    /**
+     * Método que devolve o valor guardado dentro do gene
+     * @return 
+     */
     @Override
     public String toString() {
+        //Optimização que ao criar uma nova string, é reservado automaticamente
+        //um espaço em memória que fica disponível para adicionar novos caracteres futuramente.
+        //Como já tem espaço reservado em memória, ao adicionar novos dados já não é preciso reservar espaço novamente
         StringBuilder __output = new StringBuilder();
         
         // se for uma instancia/allelo do tipo Boolean[] entao mostramos o valor da seguinte forma
@@ -53,6 +66,7 @@ public class Gene<T> {
                 __output.append(__allelo[__indexAlleloValue] ? "1" : "0");
             }
         } else {
+            //caso seja de um tipo ainda não implementado mostra a seguinte mensagem
             __output.append("Não esta definido ainda!!!");
         }
         

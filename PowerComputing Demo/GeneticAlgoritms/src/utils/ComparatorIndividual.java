@@ -16,9 +16,9 @@ public class ComparatorIndividual implements Comparator<Individual> {
     @Override
     public int compare(Individual o1, Individual o2) {
         
-        if(o1.fiteness() < o2.fiteness())
+        if(o1.fitness() < o2.fitness())
             return 1;
-        else if(o1.fiteness() >  o2.fiteness())
+        else if(o1.fitness() >  o2.fitness())
             return -1;
         else
             return 0;

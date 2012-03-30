@@ -1,6 +1,6 @@
 package genetics;
 
-public class OnesMax extends Individual {
+public class OnesMax extends Individual<Boolean[]> {
 
     public OnesMax() {
         
@@ -15,7 +15,7 @@ public class OnesMax extends Individual {
     }
     
     @Override
-    public int fiteness() {
+    public int fitness() {
         int __numberOfOnes = 0;
         for (Chromosome __chromosome : this) {
             for (Gene<Boolean[]> __gene : __chromosome) {
@@ -28,7 +28,10 @@ public class OnesMax extends Individual {
         }
         return __numberOfOnes;
     }
-    
+    /**
+     * 
+     * @return 
+     */
     @Override
     public Boolean[] inicializationAllelo() {
         Boolean[] __allelo = new Boolean[super.getSizeAllelo()];  

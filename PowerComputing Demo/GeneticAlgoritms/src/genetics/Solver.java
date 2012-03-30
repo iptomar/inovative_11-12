@@ -17,7 +17,8 @@ import operators.replacements.Replacement;
 import operators.selections.Tournament;
 
 /**
- *
+ * É a classe que combina as várias populações(pais e filhos) e executa os operadores
+ * genéticos sobre essas 2 populações.
  * @author diogoantonio
  */
 public class Solver extends Thread{
@@ -25,12 +26,15 @@ public class Solver extends Thread{
     private Population _parentsPopulation;
     private Population _sonsPopulation;
     
+    //array de operadores
     private ArrayList<Operator> _operators;
+    //caracteristicas da população
     private int _sizePopulation;
     private int _sizeGenotype = 1;
     private int _sizeGenome = 1; 
     private int _sizeAllelo;
     private Individual _typeIndividual;
+    //parametros de paragem
     private StopCriterion _stopCriterion;
     private int _numberIteractions;
     
@@ -55,10 +59,22 @@ public class Solver extends Thread{
      * (Não necessário apenas serve para testes e informação)
      */
     private int _stopCount;
+    
+    /**
+     * Construtor por defeito, que cria populações de 100 individuos, com alelos
+     * de tamanho 20, do tipo OnesMax(), faz 100 iterações e pára ao encontrar
+     * um individuo com fitnes 18(18 bits a 1)
+     */
     public Solver() {
         this(100, 20, new OnesMax(), 100, 18);
     }    
     
+    /**
+     * Construtor idêntico ao anterior, mas que implementa barreiras para parar
+     * as threads a correr, todas num certo ponto. sincronismo de threads.
+     * @param barrier
+     * @param barrierInteration 
+     */
     public Solver(CyclicBarrier barrier, int barrierInteration) {
         this(1000, 100, new OnesMax(), 1000, 99);
         
@@ -68,6 +84,14 @@ public class Solver extends Thread{
         this._stopCount = 1;
     }
     
+    /**
+     * Construtor em que é passado todos os parametros necessários para correr o programa
+     * @param sizePopulation - tamanho da população
+     * @param sizeAllelo - tamanho dos alelos
+     * @param typeIndividual - tipo do individuo
+     * @param iteractions - numero de iterações a efectuar
+     * @param bestfiteness  - melhor fitness a atingir
+     */
     public Solver(int sizePopulation, int sizeAllelo, Individual typeIndividual, int iteractions, int bestfiteness) {
         this._sizePopulation = sizePopulation;
         this._sizeAllelo = sizeAllelo;
@@ -82,12 +106,20 @@ public class Solver extends Thread{
     }
     
     
-    
+    /**
+     * Executa os operadores sobre as populações.
+     * Faz a selecção dos individuos, faz a reprodução criando os filhos através da informação dos pais,
+     * aplica a mutação aos filhos criados.
+     */
     public void solverRun(){
         
         this._operators = new ArrayList<Operator>(4);
-        this._operators.add(new Tournament(8, 2));        
+        //faz o torneio de selecção de elementos para fazerem reprodução
+        this._operators.add(new Tournament(8, 2));  
+        //operador crossover que corta a informação dos pais ao meio e cria 2 filhos
+        //com essa informação
         this._operators.add(new Crossover2());
+        //operador mutação com probabilidade 0.01
         this._operators.add(new Flipbit(0.01));
         this._operators.add(new operators.replacements.Tournament(this._sizePopulation, 2));
 
@@ -95,7 +127,7 @@ public class Solver extends Thread{
         this._parentsPopulation = new Population(this._sizePopulation, this._sizeGenome, this._sizeGenotype, this._sizeAllelo, this._typeIndividual);
         
         while((this._numberIteractions < this._stopCriterion.getNumberIteractions()) && 
-              (this._parentsPopulation.getBestFiteness() < this._stopCriterion.getGoodFiteness())) {
+              (this._parentsPopulation.getBestFitness() < this._stopCriterion.getGoodFiteness())) {
         
             this._parentsPopulation.incrementAgePopulation();
             this._sonsPopulation = ((Genetic)this._operators.get(0)).execute(this._parentsPopulation);
