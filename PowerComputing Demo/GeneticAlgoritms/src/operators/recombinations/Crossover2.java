@@ -4,10 +4,9 @@
  */
 package operators.recombinations;
 
+import genetics.Chromosome;
 import genetics.Individual;
-import genetics.OnesMax;
 import genetics.Population;
-import java.util.ArrayList;
 import operators.Genetic;
 
 /**
@@ -32,8 +31,8 @@ public class Crossover2 extends Recombination {
             
             int __pointOfCutAllelo = Genetic.RANDOM_GENERATOR.nextInt(__newPopulation.getSizeAllelo() - 1) + 1;
 
-            Boolean[] __father = (Boolean[])population.getIndividual(__indexParents).getGenome().get(0).getGene(0).getAllele();  
-            Boolean[] __mother = (Boolean[])population.getIndividual(__indexParents + 1).getGenome().get(0).getGene(0).getAllele();
+            Boolean[] __father = (Boolean[])((Chromosome)(population.getIndividual(__indexParents).getGenome().get(0))).getGene(0).getAllele();  
+            Boolean[] __mother = (Boolean[])((Chromosome)(population.getIndividual(__indexParents + 1).getGenome().get(0))).getGene(0).getAllele();
 
             Boolean[] __son = new Boolean[__newPopulation.getSizeAllelo()];
             Boolean[] __daughter = new Boolean[__newPopulation.getSizeAllelo()];

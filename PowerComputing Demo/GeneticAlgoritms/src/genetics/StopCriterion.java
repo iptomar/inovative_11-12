@@ -37,7 +37,7 @@ public class StopCriterion {
     /**
      * @return the _goodFiteness
      */
-    public int getGoodFiteness() {
+    public int getGoodFitness() {
         return _goodFiteness;
     }
 
