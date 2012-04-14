@@ -56,6 +56,10 @@ public class UniformCrossover {
     // for each one in the mask, there will exchange of bits between father and mother
     private int[] _mask;
 
+    /**
+     * 
+     * @param individualSize size of the parents and offspring
+     */
     public UniformCrossover(int individualSize) {
         _parentA = generateIndividual(individualSize);
         _parentB = generateIndividual(individualSize);
@@ -64,12 +68,34 @@ public class UniformCrossover {
         _mask = generateMask(individualSize, 50);
     }
 
+    /**
+     * 
+     * @param parentA
+     * @param parentB
+     * @param maskProbability probability to be zeros in the mask
+     */
     public UniformCrossover(int[] parentA, int[] parentB, int maskProbability) {
         _parentA = parentA;
         _parentB = parentB;
         _mask = generateMask(parentA.length, maskProbability);
     }
 
+    /**
+     * 
+     * @param individualSize size of the parents and offspring
+     * @param maskProbability probability to be zeros in the mask
+     */
+    public UniformCrossover(int individualSize, int maskProbability) {
+        _parentA = generateIndividual(individualSize);
+        _parentB = generateIndividual(individualSize);
+        _offspringA = new int[individualSize];
+        _offspringB = new int[individualSize];
+        _mask = generateMask(individualSize, maskProbability);
+    }
+
+    /**
+     * 
+     */
     public UniformCrossover() {
         this(DEFAULT_INDIVIDUAL_SIZE);
     }
@@ -100,21 +126,27 @@ public class UniformCrossover {
         }
         return __newIndividual;
     }
-    
-    public void crossover(){
+
+    /**
+     * Do crossover. When a "1" if found in the mask, the gene of parent A is copied to offspring B and vice versa. When a "0" if found in the mask, the gene of parent A is copied to offspring A and and the same for parent B.
+     */
+    public void crossover() {
         for (int i = 0; i < _parentA.length; i++) {
-            if(getMask()[i] == 1){
-                _offspringA[i]=_parentB[i];
-                _offspringB[i]=_parentA[i];
+            if (getMask()[i] == 1) {
+                _offspringA[i] = _parentB[i];
+                _offspringB[i] = _parentA[i];
             } else {
-                _offspringA[i]=_parentA[i];
-                _offspringB[i]=_parentB[i];
+                _offspringA[i] = _parentA[i];
+                _offspringB[i] = _parentB[i];
             }
-            
+
         }
     }
     
-    public void crossoverAndPrintOnConsole(){
+    /**
+     * Do crossover. When a "1" if found in the mask, the gene of parent A is copied to offspring B and vice versa. When a "0" if found in the mask, the gene of parent A is copied to offspring A and and the same for parent B. The parenthood, the mask and the offspring are printed to the console.
+     */
+    public void crossoverAndPrintOnConsole() {
         crossover();
         StringBuilder __output = new StringBuilder(30);
         __output.append("Parent A    = ");
@@ -189,8 +221,7 @@ public class UniformCrossover {
     public void setMask(int[] mask) {
         this._mask = mask;
     }
-    
-    
+
     public static void main(String[] args) {
         UniformCrossover op = new UniformCrossover();
         op.crossoverAndPrintOnConsole();
