@@ -23,15 +23,7 @@
 
  * project: Life Inspiration
  * version: 0.2
- * status:  stable
  *
- * ======
- * Docs
- * ======
- * 
- * Soon...
- * 
- * 
  */
 package demo;
 
