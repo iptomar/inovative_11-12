@@ -23,7 +23,7 @@
 
  * project: Life Inspiration
  * version: 0.2
- * status:  stable
+ * status:  unstable
  *
  * ======
  * Docs
@@ -44,7 +44,7 @@ import java.util.Random;
  *
  * @author diogoantonio
  */
-public class RouletteWheel {
+public class SUS {
 
     private static final Random RANDOM_GENERATOR = new Random();
     public static int DEFAULT_POPULATION_SIZE = 10;
@@ -54,15 +54,17 @@ public class RouletteWheel {
     private ArrayList<Individual> _offspring;
     private int _totalFitness;
     private int _offspringSize;
+    private double _offset;
 
-    public RouletteWheel(int aPopulationSize, int aFitnessMax, int aOffspringSize) {
+    public SUS(int aPopulationSize, int aFitnessMax, int aOffspringSize) {
         _population = generatePopulation(aPopulationSize, aFitnessMax);
         _offspring = new ArrayList<Individual>();
         _totalFitness = 0;
         _offspringSize = aOffspringSize;
+        _offset = 0;
     }
 
-    public RouletteWheel() {
+    public SUS() {
         this(DEFAULT_POPULATION_SIZE, DEFAULT_FITNESS_MAX, DEFAULT_OFFSPRING_SIZE);
     }
 
@@ -85,17 +87,19 @@ public class RouletteWheel {
 
         double __cumulativeProbability = 0;
         sumFitness();
+        _offset = _totalFitness / (double)_population.size();
         Collections.sort(getPopulation());
         for (Individual individual : getPopulation()) {
-            individual.setPercentage(__cumulativeProbability += (individual.getFitness() / (double) getTotalFitness()));
+            individual.setPercentage(__cumulativeProbability += individual.getFitness());
         }
     }
 
     private void selection() {
-        double __rand;
+        int __rand;
         calculateProbabilities();
         for (int i = 0; i < getOffspringSize(); i++) {
-            __rand = RANDOM_GENERATOR.nextDouble();
+            __rand = RANDOM_GENERATOR.nextInt(_totalFitness);
+            // TODO:seleccionar individuod dentro do offset
             for (Individual individual : getPopulation()) {
                 if (__rand < individual.getPercentage()) {
                     getOffspring().add(individual);
@@ -157,7 +161,7 @@ public class RouletteWheel {
 
     public static void main(String[] args) {
 
-        RouletteWheel op = new RouletteWheel(6, 8, 4);
+        SUS op = new SUS(6, 8, 4);
         op.selectionAndPrintToConsole();
 
     }
