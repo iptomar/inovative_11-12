@@ -27,9 +27,9 @@ public class Crossover2 extends Recombination {
                     population.getTypePopulation(), 
                     false);
         
-        // o ciclo anda de dois em dois para trazer sempre dois pais
+        // o ciclo anda de 2 em 2 para trazer sempre dois pais
         for (int __indexParents = 0; __indexParents < population.getSizePopulation(); __indexParents = __indexParents + 2) {
-            
+           //pointOfCutAllelo gerador aleatório da população
             int __pointOfCutAllelo = Genetic.RANDOM_GENERATOR.nextInt(__newPopulation.getSizeAllelo() - 1) + 1;
 
             Boolean[] __father = (Boolean[])population.getIndividual(__indexParents).getGenome().get(0).getGene(0).getAllele();  
@@ -37,7 +37,7 @@ public class Crossover2 extends Recombination {
 
             Boolean[] __son = new Boolean[__newPopulation.getSizeAllelo()];
             Boolean[] __daughter = new Boolean[__newPopulation.getSizeAllelo()];
-
+            //
             for (int __indexAlleloValuesFather = 0; __indexAlleloValuesFather < __newPopulation.getSizeAllelo(); __indexAlleloValuesFather++) {
                 if(__indexAlleloValuesFather < __pointOfCutAllelo - 1)
                     __son[__indexAlleloValuesFather] = __father[__indexAlleloValuesFather];
