@@ -1,0 +1,24 @@
+inicio
+
+População a[dim1], b[dim2], temp[dim1+dim2]
+
+para i = 0 até i = dim1+dim2-1
+	se i < dim1 então
+		temp[i] = a[i]
+	senão
+		temp[i] = b[i-dim1]
+	i = i+1
+
+para i = 0 até i = tamanho(temp[])-1
+	fitness(temp[i])
+	i = i+1
+
+ordenar_decrescente(temp[])
+
+para i = 0 até i = dim1-1
+	a[i] = temp[i]
+	i = i+1
+
+retorna População a[]
+
+fim
