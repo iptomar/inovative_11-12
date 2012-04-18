@@ -1,5 +1,5 @@
 inicio
-
+ 
 População a[dim]
 
 para i := 0 até i = dim-1

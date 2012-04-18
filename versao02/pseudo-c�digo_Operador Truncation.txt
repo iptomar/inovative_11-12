@@ -1,5 +1,5 @@
 inicio
-
+ 
 População a[dim1], b[dim2], temp[dim1+dim2]
 
 para i := 0 até i < dim1+dim2

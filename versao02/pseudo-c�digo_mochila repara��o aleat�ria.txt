@@ -1,5 +1,5 @@
 inicio
-
+ 
 População p[]
 
 para i := 0 até i = tamanho(p[])-1
