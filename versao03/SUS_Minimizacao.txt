@@ -1,0 +1,20 @@
+inicio
+
+maxFitness := maiorFitness(individuos[])+1
+
+para i := 0 ate i < tamanho(individuos[])
+	individuos[i].fitness := maxFitness-individuos[i].fitness
+	i := i+1
+
+fim
+
+
+
+maiorFitness(individuos[])
+	max := 0
+	para i := 0 ate i < tamanho(individuos[])
+		se (max < individuos[i].fitness) entao
+			max := individuos[i].fitness
+		i := i+1
+
+	retorna max 
