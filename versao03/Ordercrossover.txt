@@ -1,4 +1,4 @@
-inicio
+entra(Individuo pai, Individuo mae)
 
 dim := tamanho(pai.genes[])
 
@@ -14,7 +14,7 @@ para J := corte até j < dim
 	filha.gene[j] := procura(j, pai.gene[], filha.gene[])
 	j := j+1
 
-fim
+sai(Individuo filho, Individuo filha)
 
 
 
