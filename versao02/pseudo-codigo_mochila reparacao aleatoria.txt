@@ -1,26 +1,22 @@
-inicio
- 
-População p[]
+entra(População p[], pesoMax, peso[], valor[])
 
-para i := 0 até i = tamanho(p[])-1
-	p[i] := reparaAleatorio(p[i].genes[])
+para i := 0 até i < tamanho(p[])
+	p[i] := reparaAleatorio(p[i].genes[], pesoMax, peso[], valor[])
 	i := i+1
 
-fim
+sai(População p[])
 
 
 
 
-reparaAleatorio(Individuo genes[])
-	pesoMax
-	peso[]
-	valor[]
+reparaAleatorio(Individuo genes[], pesoMax, peso[], valor[])
 	dim := tamanho(genes[])
-	para i := 0 até i = dim-1
+	para i := 0 até i < dim
 		se genes[i] = 1 entao
 			val := val+valor[i]
 			pes := pes+peso[i]
 		i := i+1
+		
 	se pes <= pesoMax então
 		Individuo genes[].fitness := val
 		retorna genes[]
@@ -28,5 +24,5 @@ reparaAleatorio(Individuo genes[])
 		fazer
 			n := aleatório([0;dim[)
 		enquanto (genes[n] = 0)
-		genes[n] := 0
+			genes[n] := 0
 		retorna reparaAleatorio(genes[])
