@@ -1,0 +1,34 @@
+entra(Populaçao pop[])
+
+dim := tamanho(pop[])
+
+para i := 0 até i < dim
+	pop[i].fitness := fitness(pop[i])
+	i := i+1
+
+pop[] := ordenaDecrescente(pop[].fitness)
+
+para i := 1 até i < dim
+	pop[i].fitnessAcumulada := pop[i].fitness + pop[i-1].fitnessAcumulada
+	i := i+1
+
+totalFitness := pop[dim-1].fitnessAcumulada
+
+offset := totalFitness/dim
+
+n := aleatório([0;totalFitness[)
+
+individuo ind[0] := procurar(n : pop[].fitnessAcumulada)
+
+para i := 1 até i < individuosPretendidos
+	n := n+offset
+	n := n%dim
+	Individuo ind[i] := procurar(n : pop[].fitnessAcumulada)
+	i := i+1
+
+sai(Populaçao pop[])
+
+
+
+
+
