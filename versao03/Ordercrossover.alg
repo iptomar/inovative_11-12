@@ -1,0 +1,32 @@
+entra(Individuo pai, Individuo mae)
+
+dim := tamanho(pai.genes[])
+
+corte := aleatorio([1;dim-1])
+
+para i := 0 até i < corte 
+	filho.gene[i] := pai.gene[i]
+	filha.gene[i] := mae.gene[i]
+	i := i+1
+
+para J := corte até j < dim
+	filho.gene[j] := procura(j, mae.gene[], filho.gene[])
+	filha.gene[j] := procura(j, pai.gene[], filha.gene[])
+	j := j+1
+
+sai(Individuo filho, Individuo filha)
+
+
+
+
+procura(pos, progenitor.gene[], descendente.gene[])
+	p := pos-1
+	q := pos
+	enquanto (p >= 0)
+		se (descendente.gene[p] = progenitor.gene[q]) entao
+			q := q+1
+			q := q%tamanho(progenitor.gene[])
+			p := pos
+		p := p-1
+	
+	retorna progenitor.gene[q]
