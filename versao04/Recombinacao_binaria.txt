@@ -1,32 +1,42 @@
-entra(Populaçao pop[])
+entra(Populacao pais[])
 
-dim := tamanho(pop[])
+dim := tamanho(pais[])
+dimGene0 := tamanho(pais[].gene[0].alelo[])
+dimGene1 := tamanho(pais[].gene[1].alelo[])
+Populacao filhos[] := nova Populacao[dim]
 
 para i := 0 até i < dim
-	pop[i].fitness := fitness(pop[i])
+	pais[i].fitness := fitness(pais[i])
 	i := i+1
 
-pop[] := ordenaDecrescente(pop[].fitness)
+pais[] := ordenaDecrescente(pais[].fitness)
 
-para i := 1 até i < dim
-	pop[i].fitnessAcumulada := pop[i].fitness + pop[i-1].fitnessAcumulada
-	i := i+1
+para i := 0 até i < dim-1
+	se (aleatorio([0;1]) > 0.65) entao
+		filhos[i] := pais[i]
+		filhos[i+1] := pais[i+1]
+	senao
+		corte := aleatorio([1;dimGene0-1])
+		para j := 0 até j < corte 
+			filhos[i].gene[0].alelo[j] := pais[i].gene[0].alelo[j]
+			filhos[i+1].gene[0].alelo[j] := pais[i+1].gene[0].alelo[j]
+			j := j+1
+		para k := corte até k < dim
+			filhos[i].gene[0].alelo[k] := pais[i+1].gene[0].alelo[k]
+			filhos[i+1].gene[0].alelo[k] := pais[i].gene[0].alelo[k]
+			k := k+1
+		corte := aleatorio([1;dimGene1-1])
+		para m := 0 até m < corte 
+			filhos[i].gene[1].alelo[m] := pais[i].gene[1].alelo[m]
+			filhos[i+1].gene[1].alelo[m] := pais[i+1].gene[1].alelo[m]
+			m := m+1
+		para n := corte até n < dim
+			filhos[i].gene[1].alelo[n] := pais[i+1].gene[1].alelo[n]
+			filhos[i+1].gene[1].alelo[n] := pais[i].gene[1].alelo[n]
+			n := n+1
+	i := i+2
 
-totalFitness := pop[dim-1].fitnessAcumulada
-
-offset := totalFitness/dim
-
-n := aleatório([0;totalFitness[)
-
-individuo ind[0] := procurar(n : pop[].fitnessAcumulada)
-
-para i := 1 até i < individuosPretendidos
-	n := n+offset
-	n := n%dim
-	Individuo ind[i] := procurar(n : pop[].fitnessAcumulada)
-	i := i+1
-
-sai(Populaçao pop[])
+sai(Populacao filhos[])
 
 
 
