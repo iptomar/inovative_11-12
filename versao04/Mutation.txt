@@ -1,0 +1,20 @@
+entra(Populaçao individuos[])
+
+dimPop := tamanho(individuos[])
+dimGene := tamanho(individuos[].genes[])
+
+para i := 0 ate i = dimPop 
+	alelo1 := aleatorio([0;dimGene[)
+	fazer
+		alelo2 := aleatorio([0;dimGene[)
+	enquanto(alelo1 = alelo2)
+
+	aleloTmp := individuos[i].genes[alelo1]
+	individuos[i].genes[alelo1] := individuos[i].genes[alelo2]
+	individuos[i].genes[alelo2] := aleloTmp
+	i := i+1
+
+sai(Populaçao individuos[])
+
+
+
