@@ -232,7 +232,7 @@ public class TSP {
         return __maxFitness;
     }
     
-    static ArrayList<int[]> orderCrossover(int[] pai, int[] mae) {
+    static ArrayList<int[]> cycleCrossover(int[] pai, int[] mae) {
         ArrayList<int[]> filhos = new ArrayList<int[]>();
         int[] filho = new int[pai.length];
         int[] filha = new int[mae.length];
@@ -334,30 +334,30 @@ public class TSP {
         numIndividuals = 100;
         numIndividualsToSelect = 70;
         individualSize = 4;
-//        costMatrix = new int[4][4];
-//        
-//        costMatrix[0][0] = 0;
-//        costMatrix[0][1] = 2;
-//        costMatrix[0][2] = 5;
-//        costMatrix[0][3] = 7;
-//        
-//        costMatrix[1][0] = 2;
-//        costMatrix[1][1] = 0;
-//        costMatrix[1][2] = 8;
-//        costMatrix[1][3] = 3;
-//        
-//        costMatrix[2][0] = 5;
-//        costMatrix[2][1] = 8;
-//        costMatrix[2][2] = 0;
-//        costMatrix[2][3] = 1;
-//        
-//        costMatrix[3][0] = 7;
-//        costMatrix[3][1] = 3;
-//        costMatrix[3][2] = 1;
-//        costMatrix[3][3] = 0;
+        costMatrix = new int[4][4];
+        
+        costMatrix[0][0] = 0;
+        costMatrix[0][1] = 2;
+        costMatrix[0][2] = 5;
+        costMatrix[0][3] = 7;
+        
+        costMatrix[1][0] = 2;
+        costMatrix[1][1] = 0;
+        costMatrix[1][2] = 8;
+        costMatrix[1][3] = 3;
+        
+        costMatrix[2][0] = 5;
+        costMatrix[2][1] = 8;
+        costMatrix[2][2] = 0;
+        costMatrix[2][3] = 1;
+        
+        costMatrix[3][0] = 7;
+        costMatrix[3][1] = 3;
+        costMatrix[3][2] = 1;
+        costMatrix[3][3] = 0;
         
         // Inicializar a tabela de custos aleatoria (1º parametro é o maximo do custo)
-        costMatrix = generatoRandomCostMatrix(100, individualSize);
+        // costMatrix = generatoRandomCostMatrix(100, individualSize);
         
         // Inicializar a população aleatoria
         ArrayList<int[]> initialPopulation = new ArrayList<int[]>(numIndividuals);
@@ -385,7 +385,7 @@ public class TSP {
             ArrayList<int[]> __individualsSons = new ArrayList<int[]>(__individualsSelects.size());
             for (int i = 0; i < __individualsSelects.size(); i = i + 2) {
                 __individualsSons.addAll(
-                        orderCrossover(
+                        cycleCrossover(
                             __individualsSelects.get(i % (__individualsSelects.size()-1)), 
                             __individualsSelects.get((i+1) % (__individualsSelects.size()-1))));
             }
