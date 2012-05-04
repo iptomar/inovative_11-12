@@ -6,21 +6,22 @@ entra(Individuo pai, Individuo mae)
 	Individuo filho1 := novo Individuo[dimGene]
 	Individuo filho2 := novo Individuo[dimGene]
 	para i := 0 ate i < dimGene
-		se(i < corte1 ou i >= corte2) entao
+		se(i >= corte1 e i < corte2) entao
 			filho1.gene[i] := mae.gene[i]
 			filho2.gene[i] := pai.gene[i]
 		senao
-			filho1.gene[i] := procura(mae, pai, i, corte1, corte2))
-			filho2.gene[i] := procura(pai, mae, i, corte1, corte2))	
+			filho1.gene[i] := procura(pai, mae, i, corte1, corte2))
+			filho2.gene[i] := procura(mae, pai, i, corte1, corte2))	
 		i := i+1
 				
 sai(Individuo filho1, Individuo filho2)
 
 
 
-procura(Individuo progenitor1, Individuo progenitor2, indicador, corte1, corte2)
+
+procura(Individuo progenitor1, Individuo progenitor2, posicao, corte1, corte2)
 	para i := corte1 ate i < corte2
-		se(progenitor1.gene[i] = progenitor2.gene[indicador])
-			retorna(Gene progenitor1.gene[indicador])
+		se(progenitor1.gene[posicao] = progenitor2.gene[i])
+			retorna(Gene progenitor1.gene[i])
 		i := i+1
-retorna(Gene progenitor2.gene[indicador])
+retorna(Gene progenitor1.gene[posicao])
