@@ -3,7 +3,7 @@ entra(Populaçao individuos[])
 	dimPop := tamanho(individuos[])
 	dimGene := tamanho(individuos[].genes[])
 	
-	para i := 0 ate i = dimPop 
+	para i := 0 ate i < dimPop 
 		alelo1 := aleatorio(0<=rand<dimGene)
 		alelo2 := aleatorio(alelo1<=rand<dimGene)
 		
