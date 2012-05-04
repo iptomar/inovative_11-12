@@ -1,51 +1,26 @@
-por acabar-----------------
-
-
-
-
 entra(Individuo pai, Individuo mae)
 
 	dimGene := tamanho(pai.genes[])
-	alelo1 := aleatorio(0<=rand<dimGene)
-	alelo2 := aleatorio(alelo1<rand<dimGene)
+	corte1 := aleatorio(0<=rand<dimGene)
+	corte2 := aleatorio(corte1<rand<dimGene)
 	Individuo filho1 := novo Individuo[dimGene]
 	Individuo filho2 := novo Individuo[dimGene]
 	para i := 0 ate i < dimGene
-		se(i <= alelo1 ou i > alelo2) entao
-			filho1.gene[i] := pai.gene[i]
-			filho2.gene[i] := mae.gene[i]
-		senao
-			filho2.gene[i] := pai.gene[i]
+		se(i < corte1 ou i >= corte2) entao
 			filho1.gene[i] := mae.gene[i]
+			filho2.gene[i] := pai.gene[i]
+		senao
+			filho1.gene[i] := procura(mae, pai, i, corte1, corte2))
+			filho2.gene[i] := procura(pai, mae, i, corte1, corte2))	
 		i := i+1
-		
-	para i := 0 ate i < dimGene
-		se(i <= alelo1 ou i > alelo2) entao
-			se(procura(pai, filho1.gene[i], alelo1, alelo2)) entao
-				
-
-		
-		i := i+1
-
 				
 sai(Individuo filho1, Individuo filho2)
 
 
 
-procura(Individuo progenitor, Alelo alelo, alelo1, alelo2)
-	encontrou := falso
-	para i := alelo1 ate i < alelo2
-		se(progenitor.gene[i] = alelo)
-			encontrou := verdadeiro
-			
-			retorna
+procura(Individuo progenitor1, Individuo progenitor2, indicador, corte1, corte2)
+	para i := corte1 ate i < corte2
+		se(progenitor1.gene[i] = progenitor2.gene[indicador])
+			retorna(Gene progenitor1.gene[indicador])
 		i := i+1
-retorna(Boleano encontrou)
-
-
-
-troca(Individuo pessoa, alelo1, alelo2)
-	aleloTmp := pessoa.genes[alelo1]
-	pessoa.genes[alelo1] := pessoa.genes[alelo2]
-	pessoa.genes[alelo2] := aleloTmp
-retorna(Individuo pessoa)
+retorna(Gene progenitor2.gene[indicador])
