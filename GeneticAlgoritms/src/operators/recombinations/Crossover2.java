@@ -5,9 +5,7 @@
 package operators.recombinations;
 
 import genetics.Individual;
-import genetics.OnesMax;
 import genetics.Population;
-import java.util.ArrayList;
 import operators.Genetic;
 
 /**
