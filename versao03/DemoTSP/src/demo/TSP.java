@@ -17,102 +17,243 @@ public class TSP {
 
     static final Random RANDOM_GENERATOR = new Random();
 
-    static String individualToString(int[] individual) {
-        StringBuilder __individualString = new StringBuilder();
-        for (int i = 0; i < individual.length; i++) {
-            __individualString.append(individual[i]).append("\t");
+    
+    
+    public static void main(String[] args) {
+
+        int __numberIndividuals;                // numero de individuos
+        int __numberIndividualsToSelect;        // numero de individuos a seleccionar para cruzamento
+        int __individualSize;                   // numero de cidades
+        int __numberOfGenerations;              // numero de gerações ou iterações que o algoritmo vai correr
+        int __bestFitness;                      // fitness usaso como criteiro de paragem
+        int[][] __costMatrix;                   // matriz com os custos de cada caminho
+        ArrayList<int[]> __initialPopulation;
+        ArrayList<int[]> __individualsSelectToCrossover;
+        ArrayList<int[]> __populationOffspring;
+        
+        
+        __numberOfGenerations       = 1000;
+        __bestFitness               = 1;
+        __numberIndividuals         = 10;
+        __numberIndividualsToSelect = 8;
+        __individualSize            = 4;
+        __costMatrix                = new int[4][4];
+        
+        __costMatrix[0][0] = 0;
+        __costMatrix[0][1] = 2;
+        __costMatrix[0][2] = 5;
+        __costMatrix[0][3] = 7;
+        
+        __costMatrix[1][0] = 2;
+        __costMatrix[1][1] = 0;
+        __costMatrix[1][2] = 8;
+        __costMatrix[1][3] = 3;
+        
+        __costMatrix[2][0] = 5;
+        __costMatrix[2][1] = 8;
+        __costMatrix[2][2] = 0;
+        __costMatrix[2][3] = 1;
+        
+        __costMatrix[3][0] = 7;
+        __costMatrix[3][1] = 3;
+        __costMatrix[3][2] = 1;
+        __costMatrix[3][3] = 0;
+        
+        // Inicializar a tabela de custos aleatoria (1º parametro é o maximo do custo)
+        // costMatrix = generatoRandomCostMatrix(100, individualSize);
+        
+        // Inicializar a população aleatoria
+        __initialPopulation = new ArrayList<int[]>(__numberIndividuals);
+        for (int __indexIndividual = 0; __indexIndividual < __numberIndividuals; __indexIndividual++) {
+            //initialPopulation.add(individualRepairs(generateRandomIndividual(individualSize)));
+            int[] __individual          = _generateRandomIndividual(__individualSize);
+            int[] __individualRepair    = _individualRepairs(__individual);
+
+            __initialPopulation.add(__individualRepair);
         }
-        return __individualString.toString();
-    }
 
-    static String costMatrixToString(int[][] costMatrix) {
-        StringBuilder __costMatrixString = new StringBuilder();
-        for (int i = 0; i < costMatrix.length; i++) {
-            for (int j = 0; j < costMatrix.length; j++) {
-                __costMatrixString.append(costMatrix[i][j]).append(" ");
-
+        // corre este ciclo ate atingir o maximo numero de gerações ou encontrar o best procurado num individuo da população
+        while((__numberOfGenerations--) > 0 && _bestFitness(__initialPopulation, __costMatrix) >= __bestFitness){
+        
+            // remover o individio não reparado e volta a colocar ele na população ja reparado
+            for (int __indexIndividual = 0; __indexIndividual < __initialPopulation.size(); __indexIndividual++) {
+                int[] __individualRepair = _individualRepairs(__initialPopulation.get(__indexIndividual));
+                __initialPopulation.remove(__indexIndividual);
+                __initialPopulation.add(__individualRepair);
             }
-            __costMatrixString.append("\n");
-        }
-        return __costMatrixString.toString();
-    }
+            
+            // Selection com SUS (Minimizatin)
+            __individualsSelectToCrossover = SUS(__initialPopulation, __numberIndividualsToSelect, __costMatrix);
 
-    static int[] generateRandomIndividual(int size) {
-        int[] __newIndividual = new int[size];
-        // fill individual width indexes between 0 and size
-        for (int i = 0; i < __newIndividual.length; i++) {
-            __newIndividual[i] = i;
-        }
-        int max = __newIndividual.length - 1;
-        while (max > 0) {
-            int index = RANDOM_GENERATOR.nextInt(max);
-            int aux = __newIndividual[index];
-            __newIndividual[index] = __newIndividual[max];
-            __newIndividual[max] = aux;
-            max--;
-        }
-        return __newIndividual;
-    }
-
-    static int[][] generatoRandomCostMatrix(int maxCost, int numPoints) {
-        int[][] __newCostMatrix = new int[numPoints][numPoints];
-        for (int i = 0; i < numPoints; i++) {
-            // the cost of a point to itself is 0 (same place)
-            __newCostMatrix[i][i] = 0;
-            for (int j = i + 1; j < numPoints; j++) {
-                // generates a upper triangular matrix, and then mirror to the lower triangular matrix
-                __newCostMatrix[i][j] = __newCostMatrix[j][i] = RANDOM_GENERATOR.nextInt(maxCost);
-            }
-        }
-        return __newCostMatrix;
-    }
-
-    static int[] individualRepairs(int[] individual) {
-        int[] __newIndividual = new int[individual.length];
-        int __zeroIndex = 0;
-        // search for position of 0
-        for (int i = 0; i < individual.length; i++) {
-            if (individual[i] == 0) {
-                __zeroIndex = i;
-                break;
-            }
-        }
-        for (int i = 0; i < individual.length; i++) {
-            // rotating vector from the zero position
-            // example: [2,4,0,3] -> [2,4|0,3] -> [0,3,2,4]
-            __newIndividual[i] = individual[(i + __zeroIndex) % individual.length];
-        }
-        return __newIndividual;
-    }
-
-    static int calculateFitness(int[] individual, int[][] costMatrix) {
-        // starting point
-        int __fitness = 0;
-        for (int i = 1; i <= individual.length; i++) {
-            // adds to fitness the cost of traveling between points (in the order expressed in individual)
-            __fitness += costMatrix[individual[i - 1]][individual[i % individual.length]];
-        }
-        return __fitness;
-    }
-
-    static ArrayList<int[]> selection(ArrayList<int[]> pop, int numIndividuals, int[][] costMatrix) {
-        ArrayList<int[]> __selectedIndividuals = new ArrayList<int[]>();
-        for (int i = 0; i < numIndividuals; i++) {
-            int index1 = RANDOM_GENERATOR.nextInt(pop.size());
-            int index2 = RANDOM_GENERATOR.nextInt(pop.size());
-            int fitness1 = calculateFitness(pop.get(index1), costMatrix);
-            int fitness2 = calculateFitness(pop.get(index2), costMatrix);
-            if (fitness1 < fitness2) {
-                __selectedIndividuals.add(pop.get(index1));
-            } else {
-                __selectedIndividuals.add(pop.get(index2));
+            // CycleCrossover (para cada dois individuos aplica o operador de cycleCrossover)
+            __populationOffspring = new ArrayList<int[]>(__individualsSelectToCrossover.size());
+            for (int __indexIndividual = 0; __indexIndividual < __individualsSelectToCrossover.size(); __indexIndividual = __indexIndividual + 2) {
+                __populationOffspring.addAll(
+                        _cycleCrossover(
+                            __individualsSelectToCrossover.get(__indexIndividual % (__individualsSelectToCrossover.size()-1)), 
+                            __individualsSelectToCrossover.get((__indexIndividual+1) % (__individualsSelectToCrossover.size()-1))));
             }
 
+            // Mutation com SwapGene com probabilidade de 1%
+            _invertion(__populationOffspring, 1);
+            
+            // Truncation
+            __initialPopulation = _truncation(__initialPopulation, __populationOffspring, __costMatrix, __numberIndividuals);
+        
         }
-        return __selectedIndividuals;
+        
+        _writeToConsoleMatrix(__costMatrix);
+        
+        System.out.println("");
+        
+        for (int[] __individual : __initialPopulation) {
+            _writeToConsoleIndividual(__individual, __costMatrix);
+        }
+        
+        System.out.println("");
+        
+        _writeToConsoleIndividual(_bestIndividual(__initialPopulation, __costMatrix), __costMatrix);
+    }
+
+    
+    /* Funcões com os operadores usados nesta demo */
+    
+    private static ArrayList<int[]> _truncation(ArrayList<int[]> progenitors, ArrayList<int[]> descendants, final int[][] costMatrix, int numberOfIndividualsForNewGeneration) {
+        ArrayList<int[]> __newGeneration;
+        __newGeneration = new ArrayList<int[]>();
+        
+        __newGeneration.addAll(descendants);
+        __newGeneration.addAll(progenitors);
+        
+        Collections.sort(__newGeneration, new Comparator<int[]>() {
+
+            @Override
+            public int compare(int[] individual1, int[] individual2) {
+                int __fitnessIndividual1;
+                int __fitnessIndividual2;
+
+                __fitnessIndividual1 = _calculateFitness(individual1, costMatrix);
+                __fitnessIndividual2 = _calculateFitness(individual2, costMatrix);
+
+                if(__fitnessIndividual1 > __fitnessIndividual2)
+                    return 1;
+                
+                if(__fitnessIndividual1 < __fitnessIndividual2)
+                    return -1;
+                
+                return 0;
+            }
+            
+        });
+
+        return new ArrayList<int[]>(__newGeneration.subList(0, numberOfIndividualsForNewGeneration));
     }
     
-    static ArrayList<int[]> SUS(ArrayList<int[]> population, int numIndividualsToSelect, int[][] costMatrix) {
+    private static void _swapGene(ArrayList<int[]> population, double probability){
+        for (int[] __individual : population) {
+            if(probability > RANDOM_GENERATOR.nextDouble()){
+                int[] __points = new int[] { 0,0 };
+                
+                _generatorTwoPointsDistincts(__points, __individual.length);
+                _exchangeValuesFromArrayInTwoPoints(__individual, __points);
+            }
+        }
+    }
+    
+    private static void _invertion(ArrayList<int[]> population, double probability){
+        for (int[] __individual : population) {
+            if(probability > RANDOM_GENERATOR.nextDouble()){
+                int[] __points = new int[] { 0,0 };
+                
+                _generatorTwoPointsDistincts(__points, __individual.length);
+                
+                _invertOrderBetweenTwoPointers(__points[0], __individual, __points[1]);
+            }
+        }
+    }
+    
+    protected static void _exchangeValuesFromArrayInTwoPoints(int[] __individual, int[] points) {       
+        int __temp = __individual[points[0] % __individual.length];
+        __individual[points[0] % __individual.length] = __individual[points[1] % __individual.length];
+        __individual[points[1] % __individual.length] = __temp;
+    }
+    
+    protected static void _generatorTwoPointsDistincts(int[] points, int maxValueExclusive){
+        points[0] = RANDOM_GENERATOR.nextInt(maxValueExclusive);
+        // vai gerar numeros enquanto os dois valores forem iguais
+        do {
+            points[1] = RANDOM_GENERATOR.nextInt(maxValueExclusive);
+        } while(points[0] == points[1]);
+    }
+    
+    protected static void _invertOrderBetweenTwoPointers(int ponto1, int[] __individual, int ponto2) {
+        int ponto1Temp;
+        int distanceBetweenPointers;
+        
+        ponto1Temp              = ponto1;
+        distanceBetweenPointers = 0;
+        
+        while(((ponto1Temp++)%__individual.length) != ponto2) distanceBetweenPointers++;
+        
+        for(int pontoMover = 0; pontoMover < distanceBetweenPointers; pontoMover++)
+            for(int indexValue = 0; indexValue < distanceBetweenPointers-pontoMover; indexValue++){                
+                _exchangeValuesFromArrayInTwoPoints(__individual, 
+                        new int[] { 
+                            indexValue + ponto1,        // ponto actual
+                            indexValue + ponto1 + 1});  // ponto a seguir
+            }
+    }
+    
+    private static ArrayList<int[]> _cycleCrossover(int[] father, int[] mother) {
+        ArrayList<int[]> filhos = new ArrayList<int[]>();
+        int[] filho = new int[father.length];
+        int[] filha = new int[mother.length];
+
+        int dim = father.length;
+
+        int corte = RANDOM_GENERATOR.nextInt(dim - 2) + 1;
+        
+        for (int i = 0; i < corte; i++) {
+            filho[i] = father[i];
+            filha[i] = mother[i];
+        }
+
+        for (int i = corte; i < dim; i++) {
+            filho[i] = _searchForNextGene(i, mother, filho);
+            filha[i] = _searchForNextGene(i, father, filha);
+        }
+
+        filhos.add(filho);
+        filhos.add(filha);
+        return filhos;
+    }
+
+    private static int _searchForNextGene(int positionOfCutProgenitor, int[] progenitor, int[] descendant){
+        int __valueProgenitor;
+        boolean __valueExiste;
+        __valueProgenitor = 0;
+        
+        for (int __projenitorIndex = 0; __projenitorIndex < progenitor.length; __projenitorIndex++) {
+            
+            __valueProgenitor = progenitor[(__projenitorIndex + positionOfCutProgenitor) % progenitor.length];
+            __valueExiste = false;
+            
+            for (int __descendantIndex = 0; __descendantIndex < positionOfCutProgenitor; __descendantIndex++) {
+                if(__valueProgenitor == descendant[__descendantIndex]){
+                    __valueExiste = true;
+                    break;
+                }
+            }
+            
+            if(!__valueExiste)
+                break; 
+        }
+        
+        return __valueProgenitor;
+    }
+
+    
+    private static ArrayList<int[]> SUS(ArrayList<int[]> population, int numIndividualsToSelect, int[][] costMatrix) {
         ArrayList<int[]> __selectedIndividuals;
         int     __totalFitness;
         double  __offset;        
@@ -161,14 +302,14 @@ public class TSP {
         return __newCostMatrixMinimization;
     }
     
-    public static int _totalFitnessAcumulation(ArrayList<int[]> population, int[][] costMatrix){
+    private static int _totalFitnessAcumulation(ArrayList<int[]> population, int[][] costMatrix){
         int __totalFitness;
         
         __totalFitness = 0;
         
         for (int[] individuo : population) {
             // incrementa o total fitness
-            __totalFitness += calculateFitness(individuo, costMatrix);
+            __totalFitness += _calculateFitness(individuo, costMatrix);
         }
         
         return __totalFitness;
@@ -183,7 +324,7 @@ public class TSP {
             // incrementa o total fitness
             // recalcula o fitness do individuo para que o menor seja agora o maior e vise-versa
             // porque o problema é de minimização, os individuos com menor fitness são os melhores
-            __totalFitnessAccumulate += calculateFitness(individuo, costMatrix);
+            __totalFitnessAccumulate += _calculateFitness(individuo, costMatrix);
             
             //escolhe o individuo onde o ponteiro aponta 
             if(ponteiro <= (double)__totalFitnessAccumulate) {
@@ -197,7 +338,86 @@ public class TSP {
         return __individualSelect;
     }
     
-    static int _maxFitness(ArrayList<int[]> population, int[][] costMatrix) {
+    
+    
+    /* Funções auxiliares para mostrar resultados na consola */
+    
+    private static void _writeToConsoleIndividual(int[] individual, int[][] costMatrix) {
+        StringBuilder __result = new StringBuilder();
+        
+        for (int i = 0; i < individual.length; i++) {
+            __result.append(individual[i]);
+            __result.append(" -> ");
+        }
+        
+        __result.append("0 >>>> ");
+        __result.append(_calculateFitness(individual, costMatrix));
+        
+        System.out.println(__result);
+    }
+    
+    private static void _writeToConsoleIndividual2(int[] individual) {
+        StringBuilder __result = new StringBuilder();
+        
+        for (int i = 0; i < individual.length; i++) {
+            __result.append(individual[i]);
+            __result.append(" -> ");
+        }
+        
+        __result.append("0");
+        System.out.println(__result);
+    }
+
+    private static void _writeToConsoleMatrix(int[][] matrix) {
+        StringBuilder __result = new StringBuilder();
+        
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                __result.append(matrix[i][j]);
+                __result.append(" ");
+            }
+            __result.append("\n");
+        }
+        
+        System.out.println(__result);
+    }
+
+    
+    
+    /* Funções para seleccionar Fitness e Melhor Individuo */
+    
+    private static int _bestFitness(ArrayList<int[]> population, int[][] matrix) {
+        int __bestFitness;
+
+        __bestFitness = _maxFitness(population, matrix);
+        
+        for (int[] __individual : population) {
+            if(__bestFitness > _calculateFitness(__individual, matrix)){
+                __bestFitness = _calculateFitness(__individual, matrix);
+            }
+        }
+        
+        return __bestFitness;
+    }
+    
+    private static int[] _bestIndividual(ArrayList<int[]> population, int[][] matrix) {
+        int __bestFitness;
+        int[] __bestIndividual;
+        
+        __bestIndividual = null;
+        __bestFitness = _maxFitness(population, matrix);
+        
+        for (int[] __individual : population) {
+            if(__bestFitness >= _calculateFitness(__individual, matrix)){
+                __bestFitness = _calculateFitness(__individual, matrix);
+                __bestIndividual = __individual;
+            }
+        }
+        
+        return __bestIndividual;
+    }
+
+    private static int _maxFitness(ArrayList<int[]> population, int[][] costMatrix) {
         int __maxFitness;
         int __individualSelect;
         
@@ -205,7 +425,7 @@ public class TSP {
         __maxFitness = 0;
         
         for (int[] __individual : population) {
-            __individualSelect = calculateFitness(__individual, costMatrix);
+            __individualSelect = _calculateFitness(__individual, costMatrix);
 
             if(__maxFitness < __individualSelect)
                 __maxFitness = __individualSelect;
@@ -214,7 +434,7 @@ public class TSP {
         return __maxFitness;
     }
     
-    static int _maxCostMatrix(int[][] costMatrix) {
+    private static int _maxCostMatrix(int[][] costMatrix) {
         int __maxFitness;
         
         __maxFitness = 0;
@@ -232,289 +452,65 @@ public class TSP {
         return __maxFitness;
     }
     
-    static ArrayList<int[]> cycleCrossover(int[] pai, int[] mae) {
-        ArrayList<int[]> filhos = new ArrayList<int[]>();
-        int[] filho = new int[pai.length];
-        int[] filha = new int[mae.length];
-//dim := tamanho(pai.genes[])
-        int dim = pai.length;
-//corte := aleatorio([1;dim-1])
-        int corte = RANDOM_GENERATOR.nextInt(dim - 2) + 1;
-//para i := 0 atÈ i < corte 
-//	filho.gene[i] := pai.gene[i]
-//	filha.gene[i] := mae.gene[i]
-//	i := i+1
-
-        for (int i = 0; i < corte; i++) {
-            filho[i] = pai[i];
-            filha[i] = mae[i];
-        }
-
-//para J := corte atÈ j < dim
-//	filho.gene[j] := procura(j, mae.gene[], filho.gene[])
-//	filha.gene[j] := procura(j, pai.gene[], filha.gene[])
-//	j := j+1
-//
-//sai(Individuo filho, Individuo filha)
-        for (int i = corte; i < dim; i++) {
-            filho[i] = search(i, mae, filho);
-            filha[i] = search(i, pai, filha);
-        }
-
-        filhos.add(filho);
-        filhos.add(filha);
-        return filhos;
-    }
-
-    static int search(int positionCutProgenitor, int[] progenitor, int[] descendant){
-        int __valueProgenitor;
-        boolean __valueExiste;
-        __valueProgenitor = 0;
-        
-        for (int __projenitorIndex = 0; __projenitorIndex < progenitor.length; __projenitorIndex++) {
-            
-            __valueProgenitor = progenitor[(__projenitorIndex + positionCutProgenitor) % progenitor.length];
-            __valueExiste = false;
-            
-            for (int __descendantIndex = 0; __descendantIndex < positionCutProgenitor; __descendantIndex++) {
-                if(__valueProgenitor == descendant[__descendantIndex]){
-                    __valueExiste = true;
-                    break;
-                }
-            }
-            
-            if(!__valueExiste)
-                break; 
-        }
-        
-        return __valueProgenitor;
-    }
-    
-    // procura(pos, progenitor.gene[], descendente.gene[])
-    static int procura(int pos, int[] progenitor, int[] descendente) {
-        //p := pos-1
-        int p = pos - 1;
-        //q := pos
-        int q = pos;
-        //enquanto (p >= 0)
-        while (p >= 0) {
-            //se (descendente.gene[p] = progenitor.gene[q]) entao
-            if (descendente[p] == progenitor[q]) {
-                //q := q+1
-                q++;
-                //q := q%tamanho(progenitor.gene[])
-                q = q % progenitor.length;
-                //p := pos
-                p = pos;
-            }
-            //p := p-1
-            p--;
-        }
-
-        //retorna progenitor.gene[q]
-        return progenitor[q];
-    }
-
-    public static void main(String[] args) {
-
-        /**
-         * CONFIG
-         */
-        int numIndividuals;        // numero de individuos
-        int numIndividualsToSelect;
-        int individualSize;        // numero de cidades
-        int iterations;
-        int bestFitness;
-        int[][] costMatrix;
-
-        
-        
-        iterations = 1000;
-        bestFitness = 1;
-        numIndividuals = 100;
-        numIndividualsToSelect = 70;
-        individualSize = 4;
-        costMatrix = new int[4][4];
-        
-        costMatrix[0][0] = 0;
-        costMatrix[0][1] = 2;
-        costMatrix[0][2] = 5;
-        costMatrix[0][3] = 7;
-        
-        costMatrix[1][0] = 2;
-        costMatrix[1][1] = 0;
-        costMatrix[1][2] = 8;
-        costMatrix[1][3] = 3;
-        
-        costMatrix[2][0] = 5;
-        costMatrix[2][1] = 8;
-        costMatrix[2][2] = 0;
-        costMatrix[2][3] = 1;
-        
-        costMatrix[3][0] = 7;
-        costMatrix[3][1] = 3;
-        costMatrix[3][2] = 1;
-        costMatrix[3][3] = 0;
-        
-        // Inicializar a tabela de custos aleatoria (1º parametro é o maximo do custo)
-        // costMatrix = generatoRandomCostMatrix(100, individualSize);
-        
-        // Inicializar a população aleatoria
-        ArrayList<int[]> initialPopulation = new ArrayList<int[]>(numIndividuals);
-        for (int i = 0; i < numIndividuals; i++) {
-            //initialPopulation.add(individualRepairs(generateRandomIndividual(individualSize)));
-            int[] __individual = generateRandomIndividual(individualSize);
-            int[] __individualRepair = individualRepairs(__individual);
-
-            initialPopulation.add(__individualRepair);
-        }
-
-        while((iterations--) > 0 && _bestFitness(initialPopulation, costMatrix) >= bestFitness){
-        
-            for (int i = 0; i < initialPopulation.size(); i++) {
-                int[] __individualRepair = individualRepairs(initialPopulation.get(i));
-                initialPopulation.remove(i);
-                initialPopulation.add(__individualRepair);
-            }
-            
-            // Selection com SUS (Minimizatin)
-            ArrayList<int[]> __individualsSelects;
-            __individualsSelects = SUS(initialPopulation, numIndividualsToSelect, costMatrix);
-
-            // OrderCrossover
-            ArrayList<int[]> __individualsSons = new ArrayList<int[]>(__individualsSelects.size());
-            for (int i = 0; i < __individualsSelects.size(); i = i + 2) {
-                __individualsSons.addAll(
-                        cycleCrossover(
-                            __individualsSelects.get(i % (__individualsSelects.size()-1)), 
-                            __individualsSelects.get((i+1) % (__individualsSelects.size()-1))));
-            }
-
-            // Mutation com SwapGene
-            _swapGene(__individualsSons, 0.01);
-            
-            // Truncation
-            initialPopulation = _truncation(initialPopulation, __individualsSons, costMatrix, numIndividuals);
-        
-        }
-        
-        _writeToConsoleMatrix(costMatrix);
-        
-        System.out.println("");
-        
-        for (int[] __individual : initialPopulation) {
-            _writeToConsoleIndividual(__individual, costMatrix);
-        }
-        
-        System.out.println("");
-        
-        _writeToConsoleIndividual(_bestFitnessIndividual(initialPopulation, costMatrix), costMatrix);
-    }
-    
-    static ArrayList<int[]> _truncation(ArrayList<int[]> progenitors, ArrayList<int[]> descendants, final int[][] costMatrix, int numberOfIndividualsForNewGeneration) {
-        ArrayList<int[]> __newGeneration;
-        __newGeneration = new ArrayList<int[]>();
-        
-        __newGeneration.addAll(descendants);
-        __newGeneration.addAll(progenitors);
-        
-        Collections.sort(__newGeneration, new Comparator<int[]>() {
-
-            @Override
-            public int compare(int[] individual1, int[] individual2) {
-                int __fitnessIndividual1;
-                int __fitnessIndividual2;
-
-                __fitnessIndividual1 = calculateFitness(individual1, costMatrix);
-                __fitnessIndividual2 = calculateFitness(individual2, costMatrix);
-
-                if(__fitnessIndividual1 > __fitnessIndividual2)
-                    return 1;
-                
-                if(__fitnessIndividual1 < __fitnessIndividual2)
-                    return -1;
-                
-                return 0;
-            }
-            
-        });
-
-        return new ArrayList<int[]>(__newGeneration.subList(0, numberOfIndividualsForNewGeneration));
-    }
-    
-    static void _swapGene(ArrayList<int[]> population, double probability){
-        for (int[] __individual : population) {
-            if(probability > RANDOM_GENERATOR.nextDouble()){
-                int ponto1 = RANDOM_GENERATOR.nextInt(__individual.length);
-                int ponto2 = RANDOM_GENERATOR.nextInt(__individual.length);
-
-                // operação que garante que o ponto 1 e ponto 2 nunca são iguais
-                ponto2 = (ponto1 + ponto2) % __individual.length;
-
-                int __temp = __individual[ponto1];
-                __individual[ponto1] = __individual[ponto2];
-                __individual[ponto2] = __temp;
-            }
-        }
-    }
-    
-    static void _writeToConsoleIndividual(int[] individual, int[][] costMatrix) {
-        StringBuilder __result = new StringBuilder();
-        
+    private static int[] _individualRepairs(int[] individual) {
+        int[] __newIndividual = new int[individual.length];
+        int __zeroIndex = 0;
+        // search for position of 0
         for (int i = 0; i < individual.length; i++) {
-            __result.append(individual[i]);
-            __result.append(" -> ");
+            if (individual[i] == 0) {
+                __zeroIndex = i;
+                break;
+            }
         }
-        
-        __result.append("0 >>>> ");
-        __result.append(calculateFitness(individual, costMatrix));
-        
-        System.out.println(__result);
+        for (int i = 0; i < individual.length; i++) {
+            // rotating vector from the zero position
+            // example: [2,4,0,3] -> [2,4|0,3] -> [0,3,2,4]
+            __newIndividual[i] = individual[(i + __zeroIndex) % individual.length];
+        }
+        return __newIndividual;
     }
 
+    private static int _calculateFitness(int[] individual, int[][] costMatrix) {
+        // starting point
+        int __fitness = 0;
+        for (int i = 1; i <= individual.length; i++) {
+            // adds to fitness the cost of traveling between points (in the order expressed in individual)
+            __fitness += costMatrix[individual[i - 1]][individual[i % individual.length]];
+        }
+        return __fitness;
+    } 
     
-    static void _writeToConsoleMatrix(int[][] matrix) {
-        StringBuilder __result = new StringBuilder();
-        
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix.length; j++) {
-                __result.append(matrix[i][j]);
-                __result.append(" ");
-            }
-            __result.append("\n");
-        }
-        
-        System.out.println(__result);
-    }
-
-    private static int _bestFitness(ArrayList<int[]> population, int[][] matrix) {
-        int __bestFitness;
-
-        __bestFitness = _maxFitness(population, matrix);
-        
-        for (int[] __individual : population) {
-            if(__bestFitness > calculateFitness(__individual, matrix)){
-                __bestFitness = calculateFitness(__individual, matrix);
-            }
-        }
-        
-        return __bestFitness;
-    }
     
-    private static int[] _bestFitnessIndividual(ArrayList<int[]> population, int[][] matrix) {
-        int __bestFitness;
-        int[] __bestIndividual;
-        
-        __bestIndividual = null;
-        __bestFitness = _maxFitness(population, matrix);
-        
-        for (int[] __individual : population) {
-            if(__bestFitness >= calculateFitness(__individual, matrix)){
-                __bestFitness = calculateFitness(__individual, matrix);
-                __bestIndividual = __individual;
+    
+    /* Funções para gerar Individiuos aleatorios e Matriz de Custos Aleatoria */
+    
+    static int[] _generateRandomIndividual(int size) {
+        int[] __newIndividual = new int[size];
+        // fill individual width indexes between 0 and size
+        for (int i = 0; i < __newIndividual.length; i++) {
+            __newIndividual[i] = i;
+        }
+        int max = __newIndividual.length - 1;
+        while (max > 0) {
+            int index = RANDOM_GENERATOR.nextInt(max);
+            int aux = __newIndividual[index];
+            __newIndividual[index] = __newIndividual[max];
+            __newIndividual[max] = aux;
+            max--;
+        }
+        return __newIndividual;
+    }
+
+    static int[][] _generateRandomCostMatrix(int maxCost, int numPoints) {
+        int[][] __newCostMatrix = new int[numPoints][numPoints];
+        for (int i = 0; i < numPoints; i++) {
+            // the cost of a point to itself is 0 (same place)
+            __newCostMatrix[i][i] = 0;
+            for (int j = i + 1; j < numPoints; j++) {
+                // generates a upper triangular matrix, and then mirror to the lower triangular matrix
+                __newCostMatrix[i][j] = __newCostMatrix[j][i] = RANDOM_GENERATOR.nextInt(maxCost);
             }
         }
-        
-        return __bestIndividual;
+        return __newCostMatrix;
     }
 }
