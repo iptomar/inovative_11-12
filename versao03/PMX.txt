@@ -18,6 +18,7 @@ sai(Individuo filho1, Individuo filho2)
 
 
 
+
 procura(Individuo progenitor1, Individuo progenitor2, posicao, corte1, corte2)
 	para i := corte1 ate i < corte2
 		se(progenitor1.gene[posicao] = progenitor2.gene[i])
