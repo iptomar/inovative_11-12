@@ -4,13 +4,13 @@ entra(Populaçao individuos[])
 	dimGene := tamanho(individuos[].genes[])
 	
 	para i := 0 ate i < dimPop 
-		alelo1 := aleatorio(0<=rand<dimGene)
-		alelo2 := aleatorio(alelo1<=rand<dimGene)
+		gene1 := aleatorio(0<=rand<dimGene)
+		gene2 := aleatorio(gene1<=rand<dimGene)
 		
-		enquanto(alelo1 < alelo2) fazer
-			troca(individuos[i], alelo1, alelo2)
-			alelo1 := alelo1+1
-			alelo2 := alelo2-1
+		enquanto(gene1 < gene2) fazer
+			troca(individuos[i], gene1, gene2)
+			gene1 := gene1+1
+			gene2 := gene2-1
 
 		i := i+1
 				
@@ -18,10 +18,10 @@ sai(Populaçao individuos[])
 
 
 
-troca(Individuo pessoa, alelo1, alelo2)
+troca(Individuo pessoa, gene1, gene2)
 
-	aleloTmp := pessoa.genes[alelo1]
-	pessoa.genes[alelo1] := pessoa.genes[alelo2]
-	pessoa.genes[alelo2] := aleloTmp
+	geneTmp := pessoa.genes[gene1]
+	pessoa.genes[gene1] := pessoa.genes[gene2]
+	pessoa.genes[gene2] := geneTmp
 		
 retorna(Individuo pessoa)
