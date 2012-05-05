@@ -1,0 +1,14 @@
+entra(Populacao pais[])
+	para i := 0 até i < tamanho(pais[])						//percorre a populaçao progenitora
+		se (aleatorio(0<=rand<1) < 0.01) entao				//se factor de ponderaçao for menor,
+			pais[i].gene[0] := mutaGene(pais[i].gene[0])	//que 1% entao
+			pais[i].gene[1] := mutaGene(pais[i].gene[1])	//muta o alelo em causa
+		i := i+1											//nova iteraçao
+sai(Populacao pais[])
+
+
+
+mutaGene(Gene gene)
+	escolhido := aleatorio(0<=rand<tamanho(gene.alelo[]))	//alelo escolhido aleatoriamente
+	gene.alelo[escolhido] := 1								//toma o valor de verdadeiro
+retorna(Gene gene)
