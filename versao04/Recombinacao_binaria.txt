@@ -1,42 +1,37 @@
 entra(Populacao pais[])
-
-dim := tamanho(pais[])
-dimGene0 := tamanho(pais[].gene[0].alelo[])
-dimGene1 := tamanho(pais[].gene[1].alelo[])
-Populacao filhos[] := nova Populacao[dim]
-
-para i := 0 até i < dim
-	pais[i].fitness := fitness(pais[i])
-	i := i+1
-
-pais[] := ordenaDecrescente(pais[].fitness)
-
-para i := 0 até i < dim-1
-	se (aleatorio([0;1]) > 0.65) entao
-		filhos[i] := pais[i]
-		filhos[i+1] := pais[i+1]
-	senao
-		corte := aleatorio([1;dimGene0-1])
-		para j := 0 até j < corte 
-			filhos[i].gene[0].alelo[j] := pais[i].gene[0].alelo[j]
-			filhos[i+1].gene[0].alelo[j] := pais[i+1].gene[0].alelo[j]
-			j := j+1
-		para k := corte até k < dim
-			filhos[i].gene[0].alelo[k] := pais[i+1].gene[0].alelo[k]
-			filhos[i+1].gene[0].alelo[k] := pais[i].gene[0].alelo[k]
-			k := k+1
-		corte := aleatorio([1;dimGene1-1])
-		para m := 0 até m < corte 
-			filhos[i].gene[1].alelo[m] := pais[i].gene[1].alelo[m]
-			filhos[i+1].gene[1].alelo[m] := pais[i+1].gene[1].alelo[m]
-			m := m+1
-		para n := corte até n < dim
-			filhos[i].gene[1].alelo[n] := pais[i+1].gene[1].alelo[n]
-			filhos[i+1].gene[1].alelo[n] := pais[i].gene[1].alelo[n]
-			n := n+1
-	i := i+2
-
-sai(Populacao filhos[])
+	dim := tamanho(pais[])													//numero de individuos da populaçao progenitora
+	dimGene0 := tamanho(pais[].gene[0].alelo[])								//dimensao do primeiro gene
+	dimGene1 := tamanho(pais[].gene[1].alelo[])								//dimensao do segundo gene			
+	Populacao filhos[] := nova Populacao[dim]								//criaçao de uma geraçao vazia do tamanho da populaçao progenitora
+	para i := 0 até i < dim													//percorrer a populaçao progenitora
+		pais[i].fitness := fitness(pais[i])									//calculo do fitness dos individuos da populaçao progenitora
+		i := i+1															//nova iteraçao
+	pais[] := ordenaDecrescente(pais[].fitness)								//ordena a populaçao progenitora pelo valor do fitness decrescente
+	para i := 0 até i < dim-1												//ciclo para recombinaçao dos individuos
+		se (aleatorio(0<=rand<=1) > 0.65) entao								//se factor de ponderaçao for maior,
+			filhos[i] := pais[i]											// entao os individuos transitam como estao
+			filhos[i+1] := pais[i+1]										//
+		senao																//se factor de ponderaçao não for maior,
+			corte := aleatorio(1<=rand<=dimGene0-1)							//calculo do ponto de corte do primeiro gene
+			para j := 0 até j < corte 										//até ao corte do primeiro gene
+				filhos[i].gene[0].alelo[j] := pais[i].gene[0].alelo[j]		//copia dos pais para os filhos						
+				filhos[i+1].gene[0].alelo[j] := pais[i+1].gene[0].alelo[j]	//
+				j := j+1													//nova iteraçao
+			para k := corte até k < dim										//depois do corte do primeiro gene
+				filhos[i].gene[0].alelo[k] := pais[i+1].gene[0].alelo[k]	//copia dos pais para os filhos,
+				filhos[i+1].gene[0].alelo[k] := pais[i].gene[0].alelo[k]	//com os progenitores trocados
+				k := k+1													//nova iteraçao
+			corte := aleatorio(1<=rand<=dimGene1-1)							//calculo do ponto de corte do segundo gene	
+			para m := 0 até m < corte 										//até ao corte do segundo gene
+				filhos[i].gene[1].alelo[m] := pais[i].gene[1].alelo[m]		//copia dos pais para os filhos				
+				filhos[i+1].gene[1].alelo[m] := pais[i+1].gene[1].alelo[m]	//
+				m := m+1													//nova iteraçao
+			para n := corte até n < dim										//depois do corte do segundo gene
+				filhos[i].gene[1].alelo[n] := pais[i+1].gene[1].alelo[n]	//copia dos pais para os filhos			
+				filhos[i+1].gene[1].alelo[n] := pais[i].gene[1].alelo[n]	//com os progintores trocados			
+				n := n+1													//nova iteraçao
+		i := i+2															//nova iteraçao com um incremento de 2
+sai(Populacao filhos[])														
 
 
 
