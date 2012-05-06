@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- *
+ * 
  * @author Chorinca-Notebook
  */
 public class ReadFile {
@@ -39,7 +39,7 @@ public class ReadFile {
         
         // So para quando chegar ao fim do ficheiro
         while (!(__leitura = __in.readLine()).equals("EOF")) { 
-            System.out.println(__leitura);
+            // System.out.println(__leitura);
             
             Cidade __cidade = new Cidade();
             String[] __arrayDados = __leitura.split(" ");
@@ -65,8 +65,8 @@ public class ReadFile {
         }
     }
     
-    public int[][] convertToCostMatrix() {
-        int[][] __costMatrix = new int[this._problem.Cidades.size()][this._problem.Cidades.size()];
+    public double[][] convertToCostMatrix() {
+        double[][] __costMatrix = new double[this._problem.Cidades.size()][this._problem.Cidades.size()];
         
         // Calcula a distancia para todas as cidades e devolve em forma de matriz de custos
         // Atenção: O custo de ir para a mesma cidade, CidadeA -> CidadeA, tem custo de um e sera
@@ -90,7 +90,7 @@ public class ReadFile {
         _writeToConsoleMatrix(__readFile.convertToCostMatrix());
     }
     
-    private static void _writeToConsoleMatrix(int[][] matrix) {
+    private static void _writeToConsoleMatrix(double[][] matrix) {
         StringBuilder __result = new StringBuilder();
         
         for (int i = 0; i < matrix.length; i++) {

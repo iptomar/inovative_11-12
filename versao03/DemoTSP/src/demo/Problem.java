@@ -20,12 +20,10 @@ public class Problem {
   
     public ArrayList<Cidade> Cidades = new ArrayList<Cidade>();
     
-    public int distanciaEntreCidades(Cidade cidadeA, Cidade cidadeB) {
-        int xd = cidadeA.X - cidadeB.X;
-        int yd = cidadeA.Y - cidadeB.Y;
-        
-        // O 0.5 é porque o Math.round arredonda sempre para baixo, ou seja,
-        // 1.5 fica sempre 1
-        return (int)Math.round(Math.sqrt(xd*xd + yd*yd) + 0.5);
+    public double distanciaEntreCidades(Cidade cidadeA, Cidade cidadeB) {
+        double xd = cidadeA.X - cidadeB.X;
+        double yd = cidadeA.Y - cidadeB.Y;
+
+        return Math.sqrt(xd*xd + yd*yd);
     }
 }
