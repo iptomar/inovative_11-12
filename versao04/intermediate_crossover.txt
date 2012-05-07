@@ -1,0 +1,15 @@
+
+--------em construção-------------
+
+
+entra(Populacao pais[])
+	dimPop := tamanho(pais[])
+	para i := 0 ate i < dimPop-1
+		dimCromo := tamanho(pais[i])
+		pais[i]
+		pais[i+1]
+	i := i+2
+sai(Populacao pais[])
+
+
+
