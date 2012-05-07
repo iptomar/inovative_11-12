@@ -1,13 +1,14 @@
-
---------em construção-------------
-
-
 entra(Populacao pais[])
-	dimPop := tamanho(pais[])
-	para i := 0 ate i < dimPop-1
-		dimCromo := tamanho(pais[i])
-		pais[i]
-		pais[i+1]
+	totalPop := tamanho(pais[])
+	filhos[] := nova Populacao[totalPop]
+	para i := 0 ate i < totalPop-1 fazer
+		totalGenes := tamanho(pais[i].cromo[0].gene[])
+		para j := 0 ate j < totalGenes fazer
+			a = aleatorio(-0.25<=rand<=1.25)
+			filho[i].cromo[0].gene[j] := pais[i].cromo[0].gene[j] * a + pais[i+1].cromo[0].gene[j] * (1-a)
+			a = aleatorio(-0.25<=rand<=1.25)
+			filho[i+1].cromo[0].gene[j] := pais[i].cromo[0].gene[j] * a + pais[i+1].cromo[0].gene[j] * (1-a)
+			j := j+1
 	i := i+2
 sai(Populacao pais[])
 
