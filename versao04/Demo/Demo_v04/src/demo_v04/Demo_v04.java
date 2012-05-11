@@ -50,13 +50,13 @@ public class Demo_v04 {
             __populationInit[__indexIndividual] = new Function(__beginDomainX1, __endDomainX1, __beginDomainX2, __endDomainX2, __scriptFitness);
         }
         
-        __numberGenerationsMax  = 1000;
+        __numberGenerationsMax  = 200;
         __bestFitnessMax        = 40.0;
         
         while(((__numberGenerationsMax--) > 0) || _returnBestFitness(__populationInit) >= __bestFitnessMax) {
             __populationSelect          = roulette(__populationInit, __sizePopulationSelect);
             __populationRecombination   = recombination(__populationSelect);
-            __populationMutation        = mutation(__populationRecombination, 0.01);
+            __populationMutation        = mutation(__populationRecombination, 0.025);
             __populationInit            = truncation(__populationInit, __populationMutation, __populationInit.length);
 
             System.out.println("Generation CountDown: " + __numberGenerationsMax);
@@ -167,7 +167,7 @@ public class Demo_v04 {
             __descendents[0]    = new Function(population[__indexIndividual]);
             __descendents[1]    = new Function(population[__indexIndividual + 1]); 
 
-            if(Function.RANDOM_GENERATOR.nextDouble() < 0.65) {
+            //if(Function.RANDOM_GENERATOR.nextDouble() < 0.65) {
                 final int __sizeChromosomeX1;            
                 final int __sizeChromosomeX2;
                 final int __pointCutX1;
@@ -179,7 +179,7 @@ public class Demo_v04 {
                 __pointCutX2        = pointCutRandom(__sizeChromosomeX2);
 
                 __descendents       = crossover(__descendents[SON], __descendents[DAUGHTER], __pointCutX1, __pointCutX2);
-            }
+            //}
             
             __descendentsPopulation[__indexIndividual]      = __descendents[0];
             __descendentsPopulation[__indexIndividual + 1]  = __descendents[1];            
@@ -250,11 +250,11 @@ public class Demo_v04 {
         
         // Mutação para X1
         __indexGeneMutate = Function.RANDOM_GENERATOR.nextInt(individual.getChromossome(0).length());
-        individual.setGene(0, __indexGeneMutate, true);
+        individual.setGene(0, __indexGeneMutate, !individual.getGene(0, __indexGeneMutate));
         
         // Mutação para X2
         __indexGeneMutate = Function.RANDOM_GENERATOR.nextInt(individual.getChromossome(1).length());
-        individual.setGene(1, __indexGeneMutate, true);
+        individual.setGene(1, __indexGeneMutate, !individual.getGene(1, __indexGeneMutate));
     }
 
 
