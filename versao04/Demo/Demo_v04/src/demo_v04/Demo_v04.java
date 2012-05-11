@@ -50,14 +50,14 @@ public class Demo_v04 {
             __populationInit[__indexIndividual] = new Function(__beginDomainX1, __endDomainX1, __beginDomainX2, __endDomainX2, __scriptFitness);
         }
         
-        __numberGenerationsMax  = 200;
+        __numberGenerationsMax  = 1000;
         __bestFitnessMax        = 40.0;
         
         while(((__numberGenerationsMax--) > 0) || _returnBestFitness(__populationInit) >= __bestFitnessMax) {
             __populationSelect          = roulette(__populationInit, __sizePopulationSelect);
             __populationRecombination   = recombination(__populationSelect);
             __populationMutation        = mutation(__populationRecombination, 0.025);
-            __populationInit            = truncation(__populationInit, __populationMutation, __populationInit.length);
+            __populationInit            = tournament(__populationInit, __populationMutation, __populationInit.length);
 
             System.out.println("Generation CountDown: " + __numberGenerationsMax);
             _writeIndividualToConsole(__populationInit);
@@ -287,5 +287,28 @@ public class Demo_v04 {
         }));
 
         return (new ArrayList<>(__newGeneration.subList(0, numberOfIndividualsForNewGeneration))).toArray(descendants);
+    }
+    
+    public static Function[] tournament(Function[] progenitors, Function[] descendants, int numberOfIndividualsForNewGeneration){
+        ArrayList<Function> __population;
+        ArrayList<Function> __newGeneration;
+        
+        __population = new ArrayList<>();
+        __newGeneration = new ArrayList<>();
+        
+        __population.addAll(Arrays.asList(progenitors));
+        __population.addAll(Arrays.asList(descendants));
+        
+        while((numberOfIndividualsForNewGeneration--) > 0){
+            int __pointRandomIndividual1 = Function.RANDOM_GENERATOR.nextInt(__population.size());
+            int __pointRandomIndividual2 = Function.RANDOM_GENERATOR.nextInt(__population.size());
+            
+            if(__population.get(__pointRandomIndividual1).Fitness() >= __population.get(__pointRandomIndividual2).Fitness())
+                __newGeneration.add(new Function(__population.get(__pointRandomIndividual1)));
+            else
+                __newGeneration.add(new Function(__population.get(__pointRandomIndividual2)));
+        }
+        
+        return (new ArrayList<>(__newGeneration)).toArray(descendants);
     }
 }
