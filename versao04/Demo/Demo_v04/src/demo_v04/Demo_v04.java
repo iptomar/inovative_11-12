@@ -4,10 +4,7 @@
  */
 package demo_v04;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 /**
  *
@@ -53,19 +50,50 @@ public class Demo_v04 {
         __numberGenerationsMax  = 1000;
         __bestFitnessMax        = 40.0;
         
+        // Para guardar os individuos unicos ao longo do codigo
+        TreeSet<Function> __uniques = new TreeSet<>(new Comparator<Function>() {
+
+            @Override
+            public int compare(Function individual1, Function individual2) {
+                double __fitnessIndividual1;
+                double __fitnessIndividual2;
+
+                __fitnessIndividual1 = individual1.Fitness();
+                __fitnessIndividual2 = individual2.Fitness();
+
+                if(__fitnessIndividual1 > __fitnessIndividual2)
+                    return 1;
+                
+                if(__fitnessIndividual1 < __fitnessIndividual2)
+                    return -1;
+                
+                return 0;
+            }
+            
+        });
+        
         while(((__numberGenerationsMax--) > 0) || _returnBestFitness(__populationInit) >= __bestFitnessMax) {
-            __populationSelect          = roulette(__populationInit, __sizePopulationSelect);
+            __populationSelect          = tournament(__populationInit, __sizePopulationSelect);
             __populationRecombination   = recombination(__populationSelect);
             __populationMutation        = mutation(__populationRecombination, 0.025);
-            __populationInit            = tournament(__populationInit, __populationMutation, __populationInit.length);
+            __populationInit            = truncation(__populationInit, __populationMutation, __populationInit.length);
 
             System.out.println("Generation CountDown: " + __numberGenerationsMax);
             _writeIndividualToConsole(__populationInit);
             System.out.println("");
+            
+            __uniques.add(__populationInit[0]);
         }
 
-        System.out.println();
+        System.out.println("");
         _writeIndividualToConsoleWithXs(__populationInit);
+        System.out.println("");
+        
+        // Mostra os individuos unicos que existem durante a execução do codigo
+        for (Function function : __uniques) {
+            System.out.println(function.toString() + " -> " + function.Fitness() + " -> " + "X1 = " + function.getX1() + " X2 = " + function.getX2());
+        }
+        
     }
     
     private static void _writeIndividualToConsole(Function[] population) {
@@ -310,5 +338,27 @@ public class Demo_v04 {
         }
         
         return (new ArrayList<>(__newGeneration)).toArray(descendants);
+    }
+
+    public static Function[] tournament(Function[] progenitors, int numberOfIndividualsForSelection){
+        ArrayList<Function> __population;
+        ArrayList<Function> __newGeneration;
+        
+        __population = new ArrayList<>();
+        __newGeneration = new ArrayList<>();
+        
+        __population.addAll(Arrays.asList(progenitors));
+        
+        while((numberOfIndividualsForSelection--) > 0){
+            int __pointRandomIndividual1 = Function.RANDOM_GENERATOR.nextInt(__population.size());
+            int __pointRandomIndividual2 = Function.RANDOM_GENERATOR.nextInt(__population.size());
+            
+            if(__population.get(__pointRandomIndividual1).Fitness() >= __population.get(__pointRandomIndividual2).Fitness())
+                __newGeneration.add(new Function(__population.get(__pointRandomIndividual1)));
+            else
+                __newGeneration.add(new Function(__population.get(__pointRandomIndividual2)));
+        }
+        
+        return (new ArrayList<>(__newGeneration)).toArray(progenitors);
     }
 }
