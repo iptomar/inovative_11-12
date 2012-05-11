@@ -1,19 +1,19 @@
 entra(População p[], individuosPretendidos)
 
-para i := 0 até i < individuosPretendidos
-	Individuo pai := aleatório(p[])
-	fazer
-		Individuo mae := aleatório(p[])
-	enquanto (pai = mae)
-	para j := 0 até i < pai.totalGenes
-		n := aleatório({falso,verdadeiro})
-		se n = falso então
-			f[i].gene[j] := pai.gene[j]
-			f[i+1].gene[j] := mae.gene[j]
-		senao
-			f[i].gene[j] := mae.gene[j]
-			f[i+1].gene[j] := pai.gene[j]
-		j := j+1
-	i := i+2
+	para i := 0 até i < individuosPretendidos
+		Individuo pai := aleatório(p[])
+		fazer
+			Individuo mae := aleatório(p[])
+		enquanto (pai = mae)
+		para j := 0 ate j < pai.totalGenes
+			n := aleatório({falso,verdadeiro})
+			se n = falso então
+				f[i].gene[j] := pai.gene[j]
+				f[i+1].gene[j] := mae.gene[j]
+			senao
+				f[i].gene[j] := mae.gene[j]
+				f[i+1].gene[j] := pai.gene[j]
+			j := j+1
+		i := i+2
 
 sai(População f[])

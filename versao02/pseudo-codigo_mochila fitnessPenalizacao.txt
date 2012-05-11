@@ -1,8 +1,8 @@
 entra(População p[], pesoMax, peso[], valor[])
 
-para i := 0 até i < tamanho(p[])
-	p[i].fitness := fitnessPenal(p[i].genes[], pesoMax, peso[], valor[])
-	i := i+1
+	para i := 0 ate i < tamanho(p[])
+		p[i].fitness := fitnessPenal(p[i].genes[], pesoMax, peso[], valor[])
+		i := i+1
 
 sai(População p[])
 
@@ -10,14 +10,14 @@ sai(População p[])
 
 
 fitnessPenal(Individuo genes[], pesoMax, peso[], valor[])
-	para i := 0 até i < tamanho(peso[])
+	para i := 0 ate i < tamanho(peso[])
 		se genes[i] = 1 entao
 			val := val+valor[i]
 			pes := pes+peso[i]
 		i := i+1
-	se pes <= pesoMax então
+	se pes <= pesoMax entao
 		fitness := val
-	senão
+	senao
 		fitness := val-(pes-pesoMax)
 		
 	se fitness < 0 entao
