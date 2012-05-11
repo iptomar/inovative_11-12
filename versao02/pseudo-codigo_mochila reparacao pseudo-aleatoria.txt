@@ -1,8 +1,8 @@
 entra(População p[], pesoMax, peso[], valor[])
 
-para i := 0 até i < tamanho(p[])
-	p[i] := reparaPseudoAleatorio(p[i].genes[], pesoMax, peso[], valor[])
-	i := i+1
+	para i := 0 até i < tamanho(p[])
+		p[i] := reparaPseudoAleatorio(p[i].genes[], pesoMax, peso[], valor[])
+		i := i+1
 
 sai(População p[])
 
