@@ -211,6 +211,21 @@ public class FunctionTest {
         
         assertEquals(__result, Function.parseFunctionECMAScript(__script, __x1, __x2), 4);
     }
+    
+    @Test
+    public void testParseFunctionECMAScriptFullExpressionMax(){
+        String __script;
+        double __x1;
+        double __x2;
+        double __result;
+        
+        __script    = "21.5+x1*Math.sin(4*Math.PI*x1)+x2*Math.sin(20*Math.PI*x2)";
+        __x1        = 12.1;
+        __x2        = 5.7250;
+        __result    = 38.7328;
+        
+        assertEquals(__result, Function.parseFunctionECMAScript(__script, __x1, __x2), 4);
+    }
 
     @Test
     public void testFunctionFitness() {

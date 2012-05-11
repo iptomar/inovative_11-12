@@ -56,8 +56,8 @@ public class Demo_v04 {
         while(((__numberGenerationsMax--) > 0) || _returnBestFitness(__populationInit) >= __bestFitnessMax) {
             __populationSelect          = roulette(__populationInit, __sizePopulationSelect);
             __populationRecombination   = recombination(__populationSelect);
-            __populationMutation        = mutation(__populationRecombination, 0.01);
-            __populationInit            = truncation(__populationInit, __populationMutation, __populationInit.length);
+            __populationMutation        = mutation(__populationRecombination, 0.025);
+            __populationInit            = tournament(__populationInit, __populationMutation, __populationInit.length);
 
             System.out.println("Generation CountDown: " + __numberGenerationsMax);
             _writeIndividualToConsole(__populationInit);
@@ -167,7 +167,7 @@ public class Demo_v04 {
             __descendents[0]    = new Function(population[__indexIndividual]);
             __descendents[1]    = new Function(population[__indexIndividual + 1]); 
 
-            if(Function.RANDOM_GENERATOR.nextDouble() < 0.65) {
+            //if(Function.RANDOM_GENERATOR.nextDouble() < 0.65) {
                 final int __sizeChromosomeX1;            
                 final int __sizeChromosomeX2;
                 final int __pointCutX1;
@@ -179,7 +179,7 @@ public class Demo_v04 {
                 __pointCutX2        = pointCutRandom(__sizeChromosomeX2);
 
                 __descendents       = crossover(__descendents[SON], __descendents[DAUGHTER], __pointCutX1, __pointCutX2);
-            }
+            //}
             
             __descendentsPopulation[__indexIndividual]      = __descendents[0];
             __descendentsPopulation[__indexIndividual + 1]  = __descendents[1];            
@@ -250,11 +250,11 @@ public class Demo_v04 {
         
         // Mutação para X1
         __indexGeneMutate = Function.RANDOM_GENERATOR.nextInt(individual.getChromossome(0).length());
-        individual.setGene(0, __indexGeneMutate, true);
+        individual.setGene(0, __indexGeneMutate, !individual.getGene(0, __indexGeneMutate));
         
         // Mutação para X2
         __indexGeneMutate = Function.RANDOM_GENERATOR.nextInt(individual.getChromossome(1).length());
-        individual.setGene(1, __indexGeneMutate, true);
+        individual.setGene(1, __indexGeneMutate, !individual.getGene(1, __indexGeneMutate));
     }
 
 
@@ -287,5 +287,28 @@ public class Demo_v04 {
         }));
 
         return (new ArrayList<>(__newGeneration.subList(0, numberOfIndividualsForNewGeneration))).toArray(descendants);
+    }
+    
+    public static Function[] tournament(Function[] progenitors, Function[] descendants, int numberOfIndividualsForNewGeneration){
+        ArrayList<Function> __population;
+        ArrayList<Function> __newGeneration;
+        
+        __population = new ArrayList<>();
+        __newGeneration = new ArrayList<>();
+        
+        __population.addAll(Arrays.asList(progenitors));
+        __population.addAll(Arrays.asList(descendants));
+        
+        while((numberOfIndividualsForNewGeneration--) > 0){
+            int __pointRandomIndividual1 = Function.RANDOM_GENERATOR.nextInt(__population.size());
+            int __pointRandomIndividual2 = Function.RANDOM_GENERATOR.nextInt(__population.size());
+            
+            if(__population.get(__pointRandomIndividual1).Fitness() >= __population.get(__pointRandomIndividual2).Fitness())
+                __newGeneration.add(new Function(__population.get(__pointRandomIndividual1)));
+            else
+                __newGeneration.add(new Function(__population.get(__pointRandomIndividual2)));
+        }
+        
+        return (new ArrayList<>(__newGeneration)).toArray(descendants);
     }
 }
