@@ -1,25 +1,25 @@
-entra(População popA[], População popB[])
+entra(Populacao popA[], População popB[])
 
-dim1 := tamanho(popA[])
-dim2 := tamanho(popB[])
+	dim1 := tamanho(popA[])
+	dim2 := tamanho(popB[])
 
-nova População popT[dim1+dim2]
+	nova Populacao popT[dim1+dim2]
 
-para i := 0 até i < dim1+dim2
-	se i < dim1 então
-		popT[i] := popA[i]
-	senão
-		popT[i] := popB[i-dim1]
-	i := i+1
+	para i := 0 ate i < dim1+dim2
+		se i < dim1 então
+			popT[i] := popA[i]
+		senao
+			popT[i] := popB[i-dim1]
+		i := i+1
 
-para i := 0 até i < tamanho(popT[])
-	fitness(popT[i])
-	i := i+1
+	para i := 0 ate i < tamanho(popT[])
+		fitness(popT[i])
+		i := i+1
 
-popT[] := ordenaDecrescente(popT[])
+	popT[] := ordenaDecrescente(popT[])
 
-para i := 0 até i < dim1
-	popA[i] := popT[i]
-	i := i+1
+	para i := 0 ate i < dim1
+		popA[i] := popT[i]
+		i := i+1
 
-sai(População popA[])
+sai(Populacao popA[])

@@ -1,22 +1,22 @@
 entra(População pop[], individuosPretendidos)
 
-dim := tamanho(pop[])
+	dim := tamanho(pop[])
 
-para i := 0 até i < dim
-	pop[i].fitness := fitness(pop[i])
-	fitnessTotal := fitnessTotal+pop[i].fitness
-	i := i+1
+	para i := 0 ate i < dim
+		pop[i].fitness := fitness(pop[i])
+		fitnessTotal := fitnessTotal+pop[i].fitness
+		i := i+1
 
-pop[] := ordenaDecrescente(pop[].fitness)
+	pop[] := ordenaDecrescente(pop[].fitness)
 
-pop[0].probabilidadeAcumulada := pop[i].fitness/fitnessTotal
-para i := 1 até i < dim
-	pop[i].probabilidadeAcumulada := (pop[i].fitness/fitnessTotal)+pop[i-1].probabilidadeAcumulada
-	i := i+1
+	pop[0].probabilidadeAcumulada := pop[i].fitness/fitnessTotal
+	para i := 1 ate i < dim
+		pop[i].probabilidadeAcumulada := (pop[i].fitness/fitnessTotal)+pop[i-1].probabilidadeAcumulada
+		i := i+1
 
-para i := 0 até i < individuosPretendidos
-	n := aleatório([0;1[)
-	Individuo ind[i] := procura(n : pop[].probabilidadeAcumulada)
-	i := i+1
+	para i := 0 ate i < individuosPretendidos
+		n := aleatório([0;1[)
+		Individuo ind[i] := procura(n : pop[].probabilidadeAcumulada)
+		i := i+1
 
 sai(População ind[])
