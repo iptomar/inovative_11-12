@@ -1,10 +1,10 @@
 entra(Populaçao individuos[])
 
-maxFitness := maiorFitness(individuos[])+1
+	maxFitness := maiorFitness(individuos[])+1
 
-para i := 0 ate i < tamanho(individuos[])
-	individuos[i].fitness := maxFitness-individuos[i].fitness
-	i := i+1
+	para i := 0 ate i < tamanho(individuos[])
+		individuos[i].fitness := maxFitness-individuos[i].fitness
+		i := i+1
 
 sai(Populaçao individuos[])
 
