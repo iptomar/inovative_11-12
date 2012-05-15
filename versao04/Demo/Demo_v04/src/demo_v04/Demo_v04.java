@@ -32,13 +32,14 @@ public class Demo_v04 {
         int             __numberGenerationsMax;
         double          __bestFitnessMax;
         
-        __beginDomainX1         = -3.0;
-        __beginDomainX2         = 4.1;
-        __endDomainX1           = 12.1;
-        __endDomainX2           = 5.8;
-        __scriptFitness         = "21.5+x1*Math.sin(4*Math.PI*x1)+x2*Math.sin(20*Math.PI*x2)";
+        __beginDomainX1         = -1;
+        __beginDomainX2         = -1;
+        __endDomainX1           = 1;
+        __endDomainX2           = 1;
+        //__scriptFitness         = "21.5+x1*Math.sin(4*Math.PI*x1)+x2*Math.sin(20*Math.PI*x2)";
+        __scriptFitness         = "-x1*x1-x2*x2";
         
-        __sizePopulationInit    = 10;
+        __sizePopulationInit    = 20;
         __sizePopulationSelect  = 10;
         __populationInit        = new Function[__sizePopulationInit];
         
@@ -314,7 +315,7 @@ public class Demo_v04 {
             
         }));
 
-        return (new ArrayList<>(__newGeneration.subList(0, numberOfIndividualsForNewGeneration))).toArray(descendants);
+        return (new ArrayList<>(__newGeneration.subList(0, numberOfIndividualsForNewGeneration))).toArray(new Function[numberOfIndividualsForNewGeneration]);
     }
     
     public static Function[] tournament(Function[] progenitors, Function[] descendants, int numberOfIndividualsForNewGeneration){
@@ -337,7 +338,7 @@ public class Demo_v04 {
                 __newGeneration.add(new Function(__population.get(__pointRandomIndividual2)));
         }
         
-        return (new ArrayList<>(__newGeneration)).toArray(descendants);
+        return (new ArrayList<>(__newGeneration)).toArray(new Function[__newGeneration.size()]);
     }
 
     public static Function[] tournament(Function[] progenitors, int numberOfIndividualsForSelection){
@@ -359,6 +360,6 @@ public class Demo_v04 {
                 __newGeneration.add(new Function(__population.get(__pointRandomIndividual2)));
         }
         
-        return (new ArrayList<>(__newGeneration)).toArray(progenitors);
+        return (new ArrayList<>(__newGeneration)).toArray(new Function[__newGeneration.size()]);
     }
 }
