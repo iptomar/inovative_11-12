@@ -104,7 +104,8 @@ public class Function {
         String[] __chromosomes;
         __chromosomes = this.toString().split(" ");
         
-        return __chromosomes[index];
+        return Function.convertIntegerToBinary(Function.binaryToGray(__chromosomes[index]));
+        //return __chromosomes[index];
     }
     
     @Override
@@ -154,6 +155,10 @@ public class Function {
         final int __base;
         __base = 2;
         return Integer.parseInt(binaryValue, __base);
+    } 
+    
+    public static String convertIntegerToBinary(int number){
+        return Integer.toBinaryString(number);
     } 
     
     public static double sizeDomain(double value1, double value2){
@@ -219,4 +224,33 @@ public class Function {
         return __newIndividual;
     }
 
+    /*
+        The purpose of this function is to convert an unsigned
+        binary number to reflected binary Gray code.
+    */
+    protected static int binaryToGray(String numberBinary) {
+        int __binaryNumber;
+        
+        __binaryNumber = convertBinaryToInteger(numberBinary);
+        
+        return (__binaryNumber >> 1) ^ __binaryNumber;
+    } 
+
+    /*
+        The purpose of this function is to convert a reflected binary
+        Gray code number to a binary number.
+    */
+    protected static int grayToBinary(String numberGray) {
+        int __grayNumber;
+        int __numBits;
+        
+        __grayNumber    = convertBinaryToInteger(numberGray);
+        __numBits       = 8 * (int)Math.round((Math.log10(__grayNumber)/Math.log10(2))+0.5);
+        
+        for (int __shift = 1; __shift < __numBits; __shift *= 2)
+        {
+            __grayNumber ^= __grayNumber >> __shift;
+        }
+        return __grayNumber;
+    }
 }

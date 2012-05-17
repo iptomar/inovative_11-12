@@ -331,4 +331,35 @@ public class FunctionTest {
         assertEquals("Testar o tamanho de x1.", 18, __functionTest.getChromossome(0).length());
         assertEquals("Testar o tamanho de x2.", 15, __functionTest.getChromossome(1).length());
     }
+    
+    @Test
+    public void testGrayToInteger() {      
+        String[]    __grayNumber;
+        int         __integer;
+        
+        __grayNumber = new String[] { "0000", "0001", "0011", "0010", "0110", "0111", "0101", "0100", "1100", "1101", "1111", "1110", "1010", "1011", "1001", "1000" };
+        
+        for (int __indexGrayNumbers = 0; __indexGrayNumbers < 16; __indexGrayNumbers++) {
+            __integer = Function.grayToBinary(__grayNumber[__indexGrayNumbers]);
+            assertEquals("Testar a conversão do numero gray " + __grayNumber[__indexGrayNumbers] + " em " + __indexGrayNumbers + ".", __indexGrayNumbers, __integer);
+        }
+    }
+    
+    @Test
+    public void testIntegerToGray() {      
+        String[]    __grayNumber;        
+        String      __binaryNumber;
+        
+        __grayNumber = new String[] { "0000", "0001", "0011", "0010", "0110", "0111", "0101", "0100", "1100", "1101", "1111", "1110", "1010", "1011", "1001", "1000" };
+        
+        for (int __indexGrayNumbers = 0; __indexGrayNumbers < 16; __indexGrayNumbers++) {
+            __binaryNumber = Function.convertIntegerToBinary(Function.binaryToGray(Function.convertIntegerToBinary(__indexGrayNumbers)));
+            assertEquals(
+                    "Testar a conversão do numero inteiro " + __indexGrayNumbers + " em " + __grayNumber[__indexGrayNumbers] + ".", 
+                    __grayNumber[__indexGrayNumbers].substring(
+                        __grayNumber[__indexGrayNumbers].length() - __binaryNumber.length(), 
+                        __grayNumber[__indexGrayNumbers].length()), 
+                    __binaryNumber);
+        }
+    }
 }
