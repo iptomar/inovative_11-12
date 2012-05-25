@@ -87,9 +87,9 @@ public class TSP {
         
         
         __numberOfGenerations       = 100000;
-        __bestFitness               = 1;
-        __numberIndividuals         = 10;
-        __numberIndividualsToSelect = 8;
+        __bestFitness               = 2579;
+        __numberIndividuals         = 20;
+        __numberIndividualsToSelect = 20;
         __individualSize            = 280;
         
         ReadFile __file = new ReadFile();
@@ -100,7 +100,8 @@ public class TSP {
         __initialPopulation = new ArrayList<int[]>(__numberIndividuals);
         for (int __indexIndividual = 0; __indexIndividual < __numberIndividuals; __indexIndividual++) {
             //initialPopulation.add(individualRepairs(generateRandomIndividual(individualSize)));
-            int[] __individual          = _generateRandomIndividual(__individualSize);
+            int[] __individual          = _generateRandomIndividual(__individualSize, __costMatrix );
+//            int[] __individual          = _generateRandomIndividual(__individualSize);
             int[] __individualRepair    = _individualNormalization(__individual);
 
             __initialPopulation.add(__individualRepair);
@@ -649,6 +650,7 @@ public class TSP {
     
     /* Funções para gerar Individiuos aleatorios e Matriz de Custos Aleatoria */
     
+    
     protected static int[] _generateRandomIndividual(int size) {
         int[] __newIndividual = new int[size];
         // fill individual width indexes between 0 and size
@@ -663,9 +665,73 @@ public class TSP {
             __newIndividual[max] = aux;
             max--;
         }
+       
+        return __newIndividual;
+    }
+    
+    protected static int[] _generateRandomIndividual(int size, double[][] costMatrix) {
+        int[] __newIndividual = new int[size];
+        
+        __newIndividual[0] = 0;
+        
+        for (int i = 1; i < __newIndividual.length; i++) {
+            __newIndividual[i] = searchRandomBestPath(i-1, i, __newIndividual, costMatrix);
+        }
+        
         return __newIndividual;
     }
 
+    protected static int searchRandomBestPath(int indexPreviewsCity, int indexNextCity, int[] newIndividual, double[][] costMatrix) {
+        int __cityIndex = 0;
+        
+        ArrayList<Object[]> __listOfItensIndexAndRatio = new ArrayList<Object[]>();
+        
+        for (int __indexCity = 0; __indexCity < costMatrix.length; __indexCity++) {    
+            boolean __exist = false;
+            
+            // se for a mesma cidade salta
+            if(__indexCity == indexPreviewsCity) continue;
+            
+            // verifica se essa cidade ja esta na percurso
+            for (int __indexCityDuplicate = 0; __indexCityDuplicate < indexNextCity; __indexCityDuplicate++) {
+                if(newIndividual[__indexCityDuplicate] == __indexCity) {
+                    __exist = true;
+                    break;
+                }
+            }
+            
+            // se sim então salta essa cidade
+            if(__exist) continue;
+            
+            __listOfItensIndexAndRatio.add(new Object[] { __indexCity, costMatrix[indexPreviewsCity][__indexCity] });
+        }
+
+        // Ordena do maior para o mais pequeno a lista, para os melhores ratios ficarem
+        // em primeiro
+        Collections.sort(__listOfItensIndexAndRatio, new Comparator<Object[]>() {
+            @Override
+            public int compare(Object[] o1, Object[] o2) {
+                if((Double)o1[1] > (Double)o2[1]) return 1;
+                if((Double)o1[1] < (Double)o2[1]) return -1;
+                return 0;
+            }
+        });
+        
+        // por defeito selecciona a cidade com caminho mais curto
+        __cityIndex = (Integer)__listOfItensIndexAndRatio.get(0)[0];
+        
+        // Corre a lista dos itens com ratio
+        for (Object[] __item : __listOfItensIndexAndRatio) {
+                // calcula uma probabilidade de 95% de esse item ir para o saco
+                if(RANDOM_GENERATOR.nextDouble() <= 0.95){
+                    __cityIndex = (Integer)__item[0];
+                    break;
+                }
+        }
+        
+        return __cityIndex;
+    }
+    
     protected static double[][] _generateRandomCostMatrix(int maxCost, int numPoints) {
         double[][] __newCostMatrix = new double[numPoints][numPoints];
         for (int i = 0; i < numPoints; i++) {
