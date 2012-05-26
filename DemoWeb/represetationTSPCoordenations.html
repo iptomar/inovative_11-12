@@ -31,15 +31,15 @@
 				_.setCitys = function(matrix) {
 					_citys = new Array();
 					for(var __indexCity = 0; __indexCity < matrix.length; __indexCity++){
-						_citys.push({
-								index : __indexCity, 
-								x : _convertValuesCityToGeneric(matrix[__indexCity][X], X, matrix), 
-								y : _convertValuesCityToGeneric(matrix[__indexCity][Y], Y, matrix)
-							});
+						_citys.push(new City(
+								__indexCity, 
+								_convertValuesCityToGeneric(matrix[__indexCity][X], X, matrix), 
+								_convertValuesCityToGeneric(matrix[__indexCity][Y], Y, matrix)
+							));
 					}
 					
-					for(var index = 0;  index < _citys.length; index++) {
-						console.log("Index: " + _citys[index].index + "\tX: " + _citys[index].x + "\tY: " + _citys[index].y);
+					for(var __cityIndex in _citys) {
+						console.log("Index: " + _citys[__cityIndex].Index + "\tX: " + _citys[__cityIndex].X + "\tY: " + _citys[__cityIndex].Y);
 					}
 				}
 				
@@ -57,28 +57,41 @@
 					for(var __indexCity = 0;  __indexCity < _citys.length; __indexCity++) {
 						_canvas.fillStyle = "#00A308";
 						_canvas.fillRect(
-							_citys[__indexCity].x * _canvasWidth - 5, 
-							_citys[__indexCity].y * _canvasHeight - 5, 
+							_citys[__indexCity].X * _canvasWidth - 5, 
+							_citys[__indexCity].Y * _canvasHeight - 5, 
 							10, 
 							10); 
 					}					
 				}
 				
-				_.drawPath = function(vectorPath, color) {				
+				_.drawPath = function(vectorPath, color1, vectorPathMatch, color2) {				
 					for(var __indexPath = 1;  __indexPath < vectorPath.length; __indexPath++) {
-						// Set the style properties.
-						_canvas.strokeStyle = color;
-						_canvas.lineWidth   = 1;
 
+						if((vectorPathMatch !== null && vectorPathMatch !== undefined) &&
+							(color2 !== null && color2 !== undefined)) {
+							
+							if(_citys[vectorPath[__indexPath-1]].Index === _citys[vectorPathMatch[__indexPath-1]].Index &&
+								_citys[vectorPath[__indexPath]].Index === _citys[vectorPathMatch[__indexPath]].Index) {
+								_canvas.strokeStyle = color2;
+							} else {
+								_canvas.strokeStyle = color1;
+							}
+							
+						} else {
+							_canvas.strokeStyle = color1;
+						}
+
+						_canvas.lineWidth   = 1;
 						_canvas.beginPath();
+						
 						// Start from the top-left point.
 						_canvas.moveTo(
-							_citys[vectorPath[__indexPath-1]].x * _canvasWidth, 
-							_citys[vectorPath[__indexPath-1]].y * _canvasHeight); // give the (x,y) coordinates
+							_citys[vectorPath[__indexPath-1]].X * _canvasWidth, 
+							_citys[vectorPath[__indexPath-1]].Y * _canvasHeight); // give the (x,y) coordinates
 						_canvas.lineTo(
-							_citys[vectorPath[__indexPath]].x * _canvasWidth, 
-							_citys[vectorPath[__indexPath]].y * _canvasHeight);
-
+							_citys[vectorPath[__indexPath]].X * _canvasWidth, 
+							_citys[vectorPath[__indexPath]].Y * _canvasHeight);
+							
 						// Done! Now fill the shape, and draw the stroke.
 						// Note: your shape will not be visible until you call any of the two methods.
 						_canvas.stroke();
@@ -99,6 +112,19 @@
 					}
 					return __maxValue;
 				}
+			
+				// Definição do objecto City
+				var City = (function() {
+
+					// Construtor
+					var _city = function(index, x, y) {
+						this.Index = index;
+						this.X = x;
+						this.Y = y;
+					};
+					
+					return _city;
+				})();
 			
 			} (_canvas_demo = _canvas_demo || {}, 'myCanvas'));
 		
@@ -122,8 +148,8 @@
 			[9, 10, 500]
 		]);
 		_canvas_demo.drawCitys();
-		_canvas_demo.drawPath([0, 2, 4, 6, 8], 'blue');
-		_canvas_demo.drawPath([8, 1, 3, 5, 7], 'green');
-		_canvas_demo.drawPath([7, 9], 'red');
+		_canvas_demo.drawPath(
+			[0, 2, 4, 6, 8, 1, 3, 5, 7, 9, 0], 'blue',
+			[0, 2, 4, 6, 8, 3, 1, 5, 7, 9, 0], 'red');
 	</script>
 </html>
