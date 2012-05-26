@@ -1,0 +1,16 @@
+entra(Populacao pop[])
+
+	Para cada pop[].partícula
+		Inicializar pop[i].partícula
+	Fazer
+		Para cada pop[].partícula
+			calcularValor(pop[i].partícula.fitness)
+			Se (valor de fitness > melhor valor de fitness (pBest))
+				definaValor(pBest)
+		gBest := partícula com o melhor valor de fitness 
+		Para cada pop[].partícula
+			v[] := v[] + c1 * rand() * (pbest[] - present[]) + c2 * rand() * (gbest[] - present[])
+			present[] := persent[] + v[]
+	Enquanto (iterações máximas não forem atingidas ou critérios mínimos erro não forem atingidos)
+	
+sai(Populacao pop[])
