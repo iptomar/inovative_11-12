@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Demo - Represetation TSP Coordenation</title>
+		<style>
+			#myCanvas {
+				border: 	solid 1px black;
+				width: 		500px;
+				height: 	500px;
+			}
+		</style>
+		<script>
+		
+			var _canvas_demo;
+		
+			(function (_, elementName, undefined) {
+			
+				var X = 1,
+					Y = 2,
+					_canvasElement,
+					_canvas,
+					_citys,
+					_canvasHeight,
+					_canvasWidth;
+			
+				_.init = function() {
+					_canvasElement = document.getElementById(elementName);
+				}
+				
+				_.setCitys = function(matrix) {
+					_citys = new Array();
+					for(var __indexCity = 0; __indexCity < matrix.length; __indexCity++){
+						_citys.push(new City(
+								__indexCity, 
+								_convertValuesCityToGeneric(matrix[__indexCity][X], X, matrix), 
+								_convertValuesCityToGeneric(matrix[__indexCity][Y], Y, matrix)
+							));
+					}
+					
+					for(var __cityIndex in _citys) {
+						console.log("Index: " + _citys[__cityIndex].Index + "\tX: " + _citys[__cityIndex].X + "\tY: " + _citys[__cityIndex].Y);
+					}
+				}
+				
+				_.drawCitys = function() {
+					// tamanho do elemento html canvas
+					_canvasHeight = _canvasElement.clientHeight;
+					_canvasWidth = _canvasElement.clientWidth;
+					
+					// tamanho do canvas
+					_canvasElement.height = _canvasHeight + 10;
+					_canvasElement.width  = _canvasWidth + 10;
+					
+					_canvas = _canvasElement.getContext("2d");
+					
+					for(var __indexCity = 0;  __indexCity < _citys.length; __indexCity++) {
+						_canvas.fillStyle = "#00A308";
+						_canvas.fillRect(
+							_citys[__indexCity].X * _canvasWidth - 5, 
+							_citys[__indexCity].Y * _canvasHeight - 5, 
+							10, 
+							10); 
+					}					
+				}
+				
+				_.drawPath = function(vectorPath, color1, vectorPathMatch, color2) {				
+					for(var __indexPath = 1;  __indexPath < vectorPath.length; __indexPath++) {
+
+						if((vectorPathMatch !== null && vectorPathMatch !== undefined) &&
+							(color2 !== null && color2 !== undefined)) {
+							
+							if(_citys[vectorPath[__indexPath-1]].Index === _citys[vectorPathMatch[__indexPath-1]].Index &&
+								_citys[vectorPath[__indexPath]].Index === _citys[vectorPathMatch[__indexPath]].Index) {
+								_canvas.strokeStyle = color2;
+							} else {
+								_canvas.strokeStyle = color1;
+							}
+							
+						} else {
+							_canvas.strokeStyle = color1;
+						}
+
+						_canvas.lineWidth   = 1;
+						_canvas.beginPath();
+						
+						// Start from the top-left point.
+						_canvas.moveTo(
+							_citys[vectorPath[__indexPath-1]].X * _canvasWidth, 
+							_citys[vectorPath[__indexPath-1]].Y * _canvasHeight); // give the (x,y) coordinates
+						_canvas.lineTo(
+							_citys[vectorPath[__indexPath]].X * _canvasWidth, 
+							_citys[vectorPath[__indexPath]].Y * _canvasHeight);
+							
+						// Done! Now fill the shape, and draw the stroke.
+						// Note: your shape will not be visible until you call any of the two methods.
+						_canvas.stroke();
+						_canvas.closePath();
+					}					
+				}
+				
+				function _convertValuesCityToGeneric(value, eixo, matrix) {
+					return value / _getMax(eixo, matrix);
+				}
+				
+				function _getMax(eixo, matrix) {
+					var __maxValue = 0;
+					for(var __index = 0; __index < matrix.length; __index++) {
+						if(__maxValue < matrix[__index][eixo]) {
+							__maxValue = matrix[__index][eixo];
+						}
+					}
+					return __maxValue;
+				}
+			
+				// Definição do objecto City
+				var City = (function() {
+
+					// Construtor
+					var _city = function(index, x, y) {
+						this.Index = index;
+						this.X = x;
+						this.Y = y;
+					};
+					
+					return _city;
+				})();
+			
+			} (_canvas_demo = _canvas_demo || {}, 'myCanvas'));
+		
+		</script>
+    </head>
+    <body>
+		<canvas id="myCanvas"></canvas>
+	</body>
+	<script>
+		_canvas_demo.init();
+		_canvas_demo.setCitys([
+			[0, 10, 50],
+			[1, 20, 90],
+			[2, 30, 30],
+			[3, 40, 60],
+			[4, 50, 10],
+			[5, 60, 50],
+			[6, 70, 20],
+			[7, 80, 20],
+			[8, 90, 80],
+			[9, 10, 500]
+		]);
+		_canvas_demo.drawCitys();
+		_canvas_demo.drawPath(
+			[0, 2, 4, 6, 8, 1, 3, 5, 7, 9, 0], 'blue',
+			[0, 2, 4, 6, 8, 3, 1, 5, 7, 9, 0], 'red');
+	</script>
+</html>
