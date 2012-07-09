@@ -9,7 +9,7 @@ entra(População pop[], individuosPretendidos)
 
 	pop[] := ordenaDecrescente(pop[].fitness)
 
-	pop[0].probabilidadeAcumulada := pop[i].fitness/fitnessTotal
+	pop[0].probabilidadeAcumulada := pop[0].fitness/fitnessTotal
 	para i := 1 ate i < dim
 		pop[i].probabilidadeAcumulada := (pop[i].fitness/fitnessTotal)+pop[i-1].probabilidadeAcumulada
 		i := i+1
